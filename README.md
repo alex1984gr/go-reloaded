@@ -1,32 +1,29 @@
-# 🧠 Go Reloaded
- 
- ## 📖 Overview
- 
- Το **Go Reloaded** είναι ένα εργαλείο αυτόματης επεξεργασίας και μορφοποίησης κειμένου, γραμμένο εξ ολοκλήρου στη γλώσσα **Go**. 
- Διαβάζει ένα αρχείο εισόδου, εντοπίζει ειδικές ενδείξεις (tags) και στίξη, και παράγει ένα καθαρό, διορθωμένο αρχείο εξόδου. 
- 
- Η αρχιτεκτονική του βασίζεται σε **modular pipeline**, όπου κάθε στάδιο της επεξεργασίας είναι ανεξάρτητο και μπορεί να δοκιμαστεί ή να επεκταθεί μεμονωμένα. 
- Το project έχει σχεδιαστεί να συνεργάζεται με **AI Agents** (Codex, Copilot, Claude, ChatGPT) που ακολουθούν το πρωτόκολλο που περιγράφεται στο AGENTS.md.
- 
- ---
- 
- ## 📂 Project Structure
-bash
+🧠 Go Reloaded
+
+📖 Overview
+
+Go Reloaded is an automatic text processing and formatting tool written entirely in Go.
+It reads an input file, detects special tags and punctuation, and produces a clean, corrected output file.
+Its architecture is based on a modular pipeline, where each processing stage is independent and can be tested or extended individually.
+The project is designed to collaborate with AI Agents (Codex, Copilot, Claude, ChatGPT) that follow the protocol defined in AGENTS.md.
+
+📂 Project Structure
+
 📁 go-reloaded/
 ├── main.go
-│   # Κεντρικό σημείο εκκίνησης του προγράμματος
+│   # Program entry point
 │
 ├── pipeline/
-│   ├── readInput.go              # Διαβάζει το αρχείο εισόδου
-│   ├── tokenize.go               # Διαχωρίζει tokens
-│   ├── replaceHex.go             # Μετατρέπει hex σε δεκαδικό
-│   ├── replaceBin.go             # Μετατρέπει binary σε δεκαδικό
-│   ├── applyCaseTransform.go     # Εφαρμόζει (up), (low), (cap)
-│   ├── formatPunctuation.go      # Διορθώνει στίξη
-│   ├── fixQuotes.go              # Τοποθετεί σωστά quotes
-│   ├── fixArticles.go            # Αντικαθιστά “a” με “an”
-│   ├── applyTransformations.go   # Ενοποιεί όλα τα βήματα
-│   └── writeOutput.go            # Γράφει το αποτέλεσμα στο αρχείο εξόδου
+│   ├── readInput.go              # Reads the input file
+│   ├── tokenize.go               # Splits text into tokens
+│   ├── replaceHex.go             # Converts hex numbers to decimal
+│   ├── replaceBin.go             # Converts binary numbers to decimal
+│   ├── applyCaseTransform.go     # Applies (up), (low), (cap) transformations
+│   ├── formatPunctuation.go      # Fixes spacing around punctuation marks
+│   ├── fixQuotes.go              # Corrects single quotes placement
+│   ├── fixArticles.go            # Replaces “a” with “an” where appropriate
+│   ├── applyTransformations.go   # Combines all transformation steps
+│   └── writeOutput.go            # Writes the final output file
 │
 ├── tests/
 │   ├── readInput_test.go
@@ -39,29 +36,30 @@ bash
 │   ├── fixArticles_test.go
 │   ├── applyTransformations_test.go
 │   └── writeOutput_test.go
-│   # Όλα τα test αρχεία είναι βασισμένα στο TDD pipeline (Test Driven Development)
+│   # All test files follow a TDD (Test Driven Development) pipeline
 │
 ├── docs/
-│   ├── architecture.md           # Αναλύει το data flow και την εσωτερική αρχιτεκτονική
-│   ├── coding_standards.md       # Κανόνες γραφής Go κώδικα και ονοματοδοσίας
-│   ├── how_to_work.md            # Οδηγίες για developers και AI agents
-│   ├── blueprint-index.md        # Κεντρικός πίνακας αναφοράς των tasks
-│   └── glossary.md               # Ορολογία για το project
+│   ├── architecture.md           # Describes the internal architecture and data flow
+│   ├── coding_standards.md       # Code style and naming conventions for Go
+│   ├── how_to_work.md            # Workflow guide for developers and AI agents
+│   ├── blueprint-index.md        # Central task and progress tracker
+│   └── glossary.md               # Glossary of project terminology
 │
 ├── tasks/
-│   ├── TASK-A1.md                # Παράδειγμα: replaceHex() implementation
-│   ├── TASK-A2.md                # Παράδειγμα: replaceBin() implementation
-│   └── ...                       # Επιπλέον task αρχεία για AI Agents
+│   ├── TASK-A1.md                # Example: replaceHex() implementation
+│   ├── TASK-A2.md                # Example: replaceBin() implementation
+│   └── ...                       # Additional task files for AI Agents
 │
 ├── .github/
 │   ├── workflows/
-│   │   └── ci.yml                # GitHub Actions για αυτόματο testing και QA
-│   └── .actrc                    # Config για local CI testing με act
+│   │   └── ci.yml                # GitHub Actions for automated testing and QA
+│   └── .actrc                    # Config for local CI testing with act
 │
-├── AGENTS.md                     # Πρωτόκολλο εκτέλεσης για AI Agents
-└── README.md                     # Κεντρική τεκμηρίωση του project
+├── AGENTS.md                     # Execution protocol for AI Agents
+└── README.md                     # Main project documentation
 
-⚙️ Functional Pipeline 
+
+⚙️ Functional Pipeline
 
 readInput
 ↓
@@ -77,85 +75,58 @@ fixArticles
 ↓
 writeOutput
 
+
 🧩 Core Features
 
-| Εντολή      | Περιγραφή                                                     | Παράδειγμα                                                |
-| ----------- | ------------------------------------------------------------- | --------------------------------------------------------- |
-| `(hex)`     | Μετατρέπει αριθμό hex σε δεκαδικό                             | `"1E (hex)" → "30"`                                       |
-| `(bin)`     | Μετατρέπει αριθμό binary σε δεκαδικό                          | `"10 (bin)" → "2"`                                        |
-| `(up)`      | Κάνει τη λέξη πριν κεφαλαία                                   | `"go (up)" → "GO"`                                        |
-| `(low)`     | Κάνει τη λέξη πριν πεζά                                       | `"STOP (low)" → "stop"`                                   |
-| `(cap)`     | Κάνει τη λέξη πριν κεφαλαιογράμματη                           | `"bridge (cap)" → "Bridge"`                               |
-| `(up, n)`   | Μετατρέπει τις **n** προηγούμενες λέξεις σε κεφαλαία          | `"so exciting (up,2)" → "SO EXCITING"`                    |
-| `(low, n)`  | Μετατρέπει τις **n** προηγούμενες λέξεις σε πεζά              | `"WOW THAT'S COOL (low,3)" → "wow that's cool"`           |
-| `(cap, n)`  | Μετατρέπει τις **n** προηγούμενες λέξεις σε κεφαλαιογράμματες | `"brooklyn bridge park (cap,3)" → "Brooklyn Bridge Park"` |
-| Punctuation | Διορθώνει τη στίξη με σωστά κενά                              | `"Hello , world !" → "Hello, world!"`                     |
-| `'quotes'`  | Τοποθετεί σωστά τα μονά εισαγωγικά                            | `" ' awesome ' " → "'awesome'"`                           |
-| `a → an`    | Αντικαθιστά το “a” με “an” πριν από φωνήεν ή “h”              | `"a apple" → "an apple"`                                  |
+CommandDescriptionExample(hex)Converts a hexadecimal number to decimal"1E (hex)" → "30"(bin)Converts a binary number to decimal"10 (bin)" → "2"(up)Converts the previous word to uppercase"go (up)" → "GO"(low)Converts the previous word to lowercase"STOP (low)" → "stop"(cap)Capitalizes the previous word"bridge (cap)" → "Bridge"(up, n)Converts the n previous words to uppercase"so exciting (up,2)" → "SO EXCITING"(low, n)Converts the n previous words to lowercase"WOW THAT'S COOL (low,3)" → "wow that's cool"(cap, n)Capitalizes the n previous words"brooklyn bridge park (cap,3)" → "Brooklyn Bridge Park"PunctuationFixes spacing around punctuation marks"Hello , world !" → "Hello, world!"'quotes'Places single quotes correctly" ' awesome ' " → "'awesome'"a → anReplaces “a” with “an” before a vowel or “h” sound"a apple" → "an apple"
 
+🧱 Function Breakdown
 
-🧱 Function Breakdown 
-
-| Function                 | Περιγραφή                                |
-| ------------------------ | ---------------------------------------- |
-| `readInput()`            | Διαβάζει το αρχείο εισόδου               |
-| `tokenize()`             | Διαχωρίζει λέξεις, στίξη και tags        |
-| `replaceHex()`           | Μετατρέπει hex σε δεκαδικό               |
-| `replaceBin()`           | Μετατρέπει binary σε δεκαδικό            |
-| `applyCaseTransform()`   | Εφαρμόζει αλλαγές κεφαλαίων/πεζών        |
-| `formatPunctuation()`    | Διορθώνει τα κενά γύρω από σημεία στίξης |
-| `fixQuotes()`            | Τοποθετεί σωστά τα quotes                |
-| `fixArticles()`          | Ελέγχει το “a/an”                        |
-| `applyTransformations()` | Συνδυάζει όλες τις μετατροπές            |
-| `writeOutput()`          | Γράφει το τελικό αποτέλεσμα              |
+FunctionDescriptionreadInput()Reads the input filetokenize()Splits text into words, punctuation, and tagsreplaceHex()Converts hexadecimal numbers to decimalreplaceBin()Converts binary numbers to decimalapplyCaseTransform()Applies upper/lower/capital transformationsformatPunctuation()Fixes spacing around punctuation marksfixQuotes()Adjusts the placement of quotesfixArticles()Validates and corrects “a/an” usageapplyTransformations()Combines all transformation stepswriteOutput()Writes the final output file
 
 🧪 Testing & Quality Assurance
 
-Όλες οι συναρτήσεις ακολουθούν τη φιλοσοφία Test Driven Development (TDD).
-Τα tests βρίσκονται στον φάκελο /tests και εκτελούνται με:
-
+All functions follow the Test Driven Development (TDD) philosophy.
+Tests are located in the /tests folder and can be executed with:
 go test ./tests/...
 
-
-// Για local CI execution:
-
+For local CI execution:
 act -j build -W .github/workflows/ci.yml
+
 
 🤖 AI Integration (AGENTS.md)
 
-Το Go Reloaded είναι σχεδιασμένο ώστε να συνεργάζεται με AI Agents.
-Ο φάκελος tasks/ περιέχει markdown αρχεία όπου κάθε AI Agent εκτελεί τα βήματα:
+Go Reloaded is designed to work seamlessly with AI Agents.
+The tasks/ folder contains markdown task files where each AI Agent performs the following steps:
+
 
 Analyze & Confirm
 
+
 Generate the Tests
+
 
 Generate the Code
 
+
 QA & Mark Complete
 
-Οι οδηγίες χρήσης και οι κανόνες για Agents περιγράφονται αναλυτικά στο AGENTS.md. Δες [AGENTS.md](./AGENTS.md) για πλήρεις οδηγίες εκτέλεσης.
 
-Επιπλέον, στο docs/how_to_work.md υπάρχουν τα workflows που κάθε agent ακολουθεί:
-
+Usage instructions and operational rules for Agents are detailed in AGENTS.md.
+See AGENTS.md for full execution guidelines.
+Additionally, the workflow that every Agent follows is defined in docs/how_to_work.md:
 analyze → ask for operator confirmation → implement tests → implement code → QA
+
 
 🧭 Developer Docs
 
-Αν είσαι νέος developer ή agent, ξεκίνα από εδώ:
-
-Αρχείο	Σκοπός
-docs/architecture.md	Αναλύει το pipeline και το data flow
-docs/how_to_work.md	Οδηγεί developers & agents στα βήματα εργασίας
-docs/coding_standards.md	Οδηγίες για καθαρό, συνεπή Go κώδικα
-docs/blueprint-index.md	Επισκόπηση όλων των tasks και progress
-AGENTS.md	Το πρωτόκολλο εκτέλεσης για AI Agents
+If you’re a new developer or agent, start here:
+FilePurposedocs/architecture.mdExplains the pipeline and data flowdocs/how_to_work.mdGuides developers & agents through the work stepsdocs/coding_standards.mdClean and consistent Go code standardsdocs/blueprint-index.mdOverview of all tasks and progressAGENTS.mdExecution protocol for AI Agents
 
 🚀 Execution
 
-Τρέξε το πρόγραμμα με:
-
+Run the program with:
 go run main.go input.txt output.txt
 
-
-Το αποτέλεσμα θα αποθηκευτεί στο αρχείο output.txt.
+The result will be saved in the file:
+output.txt
