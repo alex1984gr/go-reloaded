@@ -1,27 +1,30 @@
-# 🧩 System Architecture
+🧩 System Architecture
+🎯 Purpose
 
-## 🎯 Σκοπός
-Αυτό το έγγραφο περιγράφει τη συνολική αρχιτεκτονική του project και τον τρόπο που αλληλεπιδρούν μεταξύ τους τα επιμέρους components.  
-Στόχος είναι να παρέχει στον **developer** και στον **AI Agent** μια ξεκάθαρη εικόνα της ροής δεδομένων, των σημείων ελέγχου και των κανόνων συντονισμού.
+This document describes the overall architecture of the project and how its components interact with each other.
+Its goal is to provide both the developer and the AI Agent with a clear view of the data flow, control points, and coordination rules.
 
----
+🏗️ Core Structure
 
-## 🏗️ Βασική Δομή
+The system consists of four main layers:
 
-Το σύστημα αποτελείται από τέσσερα κύρια επίπεδα:
 
-1. **Input Layer** — δέχεται εντολές και δεδομένα (tasks, αρχεία, user prompts).  
-2. **Processing Layer** — αναλύει, οργανώνει και κατανέμει το έργο στους agents ή modules.  
-3. **Execution Layer** — εκτελεί τις λειτουργίες (π.χ. test generation, code implementation).  
-4. **Output Layer** — επιστρέφει αποτελέσματα, reports ή commits στον developer.
+Input Layer — receives commands and data (tasks, files, user prompts).
 
-Κάθε επίπεδο επικοινωνεί μόνο με το αμέσως επόμενο, για να διατηρείται καθαρή ιεραρχία και modular σχεδίαση.
 
----
+Processing Layer — analyzes, organizes, and distributes the workload to agents or modules.
 
-## 🔁 Data Flow Overview
 
-```mermaid
+Execution Layer — performs the actual operations (e.g., test generation, code implementation).
+
+
+Output Layer — returns results, reports, or commits to the developer.
+
+
+Each layer communicates only with the immediately adjacent one to maintain a clean hierarchy and modular design.
+
+🔁 Data Flow Overview
+
 flowchart TD
     A[User / Operator] --> B[Agent Interface]
     B --> C[Task Analyzer]

@@ -1,115 +1,118 @@
 🧱 docs/how_to_work.md
 
-# ⚙️ Go Reloaded — How to Work
+⚙️ Go Reloaded — How to Work
 
-## 🎯 Σκοπός
-Αυτό το έγγραφο περιγράφει **τη ροή εργασίας**, **τον ρόλο των developers & AI agents**, και **τους κανόνες συνεργασίας** μέσα στο project Go Reloaded.  
-Στόχος είναι η **πλήρης συνέπεια**, η **αναπαραγωγιμότητα** και η **καθαρή επικοινωνία** σε κάθε βήμα ανάπτυξης.
+🎯 Purpose
 
----
+This document describes the workflow, the roles of developers & AI agents, and the collaboration rules within the Go Reloaded project.
+Its goal is to ensure full consistency, reproducibility, and clear communication at every stage of development.
 
-## 🧠 Ρόλοι
+🧠 Roles
 
-| Ρόλος | Περιγραφή |
-|-------|------------|
-| **Developer** | Γράφει και δοκιμάζει τον κώδικα, δημιουργεί νέα modules, φροντίζει για την τεκμηρίωση. |
-| **AI Agent** | Εκτελεί αυτόματα tasks, εντοπίζει προβλήματα consistency, προτείνει βελτιώσεις και παράγει documentation. |
-| **Auditor** | Ελέγχει commits άλλων, αξιολογεί tests, δίνει feedback και εγκρίνει merges. |
+Role	Description
+Developer	Writes and tests the code, creates new modules, and maintains documentation.
+AI Agent	Executes automated tasks, detects consistency issues, suggests improvements, and generates documentation.
+Auditor	Reviews others’ commits, evaluates tests, provides feedback, and approves merges.
+🧩 Workflow
 
----
+Task Creation
 
-## 🧩 Ροή Εργασίας
+Every new feature or fix is logged in docs/blueprint-index.md.
 
-1. **Δημιουργία Task**  
-   - Κάθε νέα λειτουργία ή διόρθωση καταγράφεται στο `docs/blueprint-index.md`.  
-   - Περιλαμβάνει περιγραφή, αρμόδιο developer/agent, ημερομηνία και κατάσταση (Pending / Done / Verified).
+Each entry includes a description, assigned developer/agent, date, and status (Pending / Done / Verified).
 
-2. **Ανάπτυξη (Development)**  
-   - Ο developer ή ο AI agent δημιουργεί branch:  
-     ```bash
-     git checkout -b feature/fixQuotes
-     ```
-   - Υλοποιεί το feature στο αντίστοιχο αρχείο του pipeline.  
-   - Δημιουργεί tests στο φάκελο `tests/`.
+Development
 
-3. **Έλεγχος (Testing)**  
-   - Εκτελούνται tests:  
-     ```bash
-     go test ./...
-     ```
-   - Όλα τα tests πρέπει να περνούν πριν γίνει commit.  
-   - Αν κάτι αποτύχει, ενημερώνεται ο auditor στο blueprint-index.md.
+The developer or AI agent creates a branch:
 
-4. **Commit & Push**  
-   - Format και lint πριν το commit:
-     ```bash
-     go fmt ./...
-     go vet ./...
-     ```
-   - Έπειτα:
-     ```bash
-     git add .
-     git commit -m "Implement replaceHex and add tests"
-     git push
-     ```
+git checkout -b feature/fixQuotes
 
-5. **Αναθεώρηση (Review)**  
-   - Ο auditor διαβάζει το diff, τα σχόλια και τα tests.  
-   - Αν εγκρίνει, σημειώνει το task ως `Verified ✅` στο blueprint-index.md.
 
----
+Implements the feature in the corresponding pipeline file.
 
-## 🧱 Κανόνες Συνεργασίας
+Creates tests inside the tests/ folder.
 
-1. **Ποτέ δεν αλλάζουμε core αρχεία χωρίς document update.**  
-2. **Όλες οι αλλαγές περνούν από testing.**  
-3. **Κάθε commit πρέπει να έχει καθαρό, περιγραφικό μήνυμα.**  
-4. **Κάθε module πρέπει να έχει docstring και test.**  
-5. **Οποιαδήποτε αλλαγή σε pipeline → ενημέρωση σε architecture.md.**
+Testing
 
----
+Run the tests:
 
-## 🧪 Δοκιμές (Testing Workflow)
+go test ./...
 
-| Είδος Test | Περιγραφή | Παράδειγμα |
-|-------------|------------|-------------|
-| **Unit Test** | Ελέγχει μεμονωμένες συναρτήσεις | `TestReplaceHex_ValidHexToDecimal` |
-| **Integration Test** | Ελέγχει ροή δεδομένων μεταξύ modules | `TestApplyTransformations_FullFlow` |
-| **Behavioral Test** | Ελέγχει αν η έξοδος ταιριάζει με το επιθυμητό αποτέλεσμα | `TestFixQuotes_ComplexText` |
 
----
+All tests must pass before committing.
 
-## 📘 Κανόνες Ενημέρωσης Documentation
+If something fails, the auditor is notified in blueprint-index.md.
 
-Μετά από κάθε αλλαγή:
+Commit & Push
 
-| Αλλαγή | Ενημερώνεται αρχείο |
-|--------|----------------------|
-| Νέα λειτουργία | `blueprint-index.md` |
-| Αλλαγή αρχιτεκτονικής | `architecture.md` |
-| Κανόνας κώδικα | `coding_standards.md` |
-| Νέος όρος ή συντομογραφία | `glossary.md` |
+Format and lint before committing:
 
----
+go fmt ./...
+go vet ./...
 
-## 🔐 Checklist πριν από κάθε Commit
 
-- [ ] Όλα τα tests περνούν (`go test ./...`)
-- [ ] Δεν υπάρχουν unused imports (`go vet ./...`)
-- [ ] Ο κώδικας είναι formatted (`go fmt ./...`)
-- [ ] Η τεκμηρίωση είναι ενημερωμένη
-- [ ] Το blueprint-index.md έχει ενημερωθεί
-- [ ] Ο auditor έχει ενημερωθεί
+Then:
 
----
+git add .
+git commit -m "Implement replaceHex and add tests"
+git push
 
-## 🧭 Παράδειγμα Ροής (End-to-End)
 
-```bash
-# 1. Δημιουργία νέου feature
+Review
+
+The auditor reviews the diff, comments, and test results.
+
+Once approved, the task is marked as Verified ✅ in blueprint-index.md.
+
+🧱 Collaboration Rules
+
+Never modify core files without updating documentation.
+
+All changes must go through testing.
+
+Each commit must have a clear, descriptive message.
+
+Every module must include a docstring and a test.
+
+Any change to the pipeline → update architecture.md.
+
+🧪 Testing Workflow
+
+Test Type	Description	Example
+Unit Test	Tests individual functions	TestReplaceHex_ValidHexToDecimal
+Integration Test	Tests data flow between modules	TestApplyTransformations_FullFlow
+Behavioral Test	Verifies if the output matches the expected behavior	TestFixQuotes_ComplexText
+
+📘 Documentation Update Rules
+
+After each modification:
+
+Change	File to Update
+New feature	blueprint-index.md
+Architecture change	architecture.md
+Code rule	coding_standards.md
+New term or abbreviation	glossary.md
+
+🔐 Pre-Commit Checklist
+
+ All tests pass (go test ./...)
+
+ No unused imports (go vet ./...)
+
+ Code is properly formatted (go fmt ./...)
+
+ Documentation is updated
+
+ blueprint-index.md has been updated
+
+ Auditor has been informed
+
+🧭 End-to-End Example
+
+# 1. Create a new feature
 git checkout -b feature/fixPunctuation
 
-# 2. Ανάπτυξη και test
+# 2. Develop and test
 vim pipeline/fixPunctuation.go
 vim tests/fixPunctuation_test.go
 go test ./...
@@ -119,11 +122,12 @@ go fmt ./...
 git add .
 git commit -m "Implement fixPunctuation and tests"
 
-# 4. Push & ενημέρωση
+# 4. Push & update
 git push
 vim docs/blueprint-index.md
 
-🤝 Στόχος
 
-Να υπάρχει τέλεια συνεργασία ανθρώπου και μηχανής.
-Κάθε commit είναι ένα βήμα προς καθαρότερο, πιο συντονισμένο και διαφανές project.
+🤝 Goal
+
+To achieve perfect collaboration between human and machine.
+Each commit is a step toward a cleaner, more coordinated, and more transparent project.

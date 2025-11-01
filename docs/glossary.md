@@ -1,50 +1,27 @@
-# 📚 Go Reloaded — Glossary
+📚 Go Reloaded — Glossary
 
-## 🎯 Σκοπός
-Αυτό το αρχείο περιγράφει τους βασικούς όρους, συντομογραφίες και τεχνικές έννοιες που χρησιμοποιούνται στο project **Go Reloaded**.  
-Στόχος είναι να υπάρχει κοινή γλώσσα επικοινωνίας ανάμεσα στους developers, στους AI Agents και στους auditors.
+🎯 Purpose
 
----
+This document defines the key terms, abbreviations, and technical concepts used in the Go Reloaded project.
+Its goal is to establish a common communication language between developers, AI Agents, and auditors.
 
-## 🔠 Βασικοί Όροι
+🔠 Key Terms
 
-| Όρος | Περιγραφή |
-|------|------------|
-| **Pipeline** | Η ακολουθία συναρτήσεων που εφαρμόζονται διαδοχικά για να μετασχηματίσουν το κείμενο. |
-| **Transformation** | Μία συγκεκριμένη λειτουργία επεξεργασίας κειμένου (π.χ. hex σε decimal, διόρθωση quotes). |
-| **Token** | Μονάδα δεδομένων στο pipeline — συνήθως μια λέξη ή σύμβολο που προκύπτει από το `tokenize()`. |
-| **Input File** | Το αρχικό αρχείο που περιέχει το μη επεξεργασμένο κείμενο. |
-| **Output File** | Το τελικό αρχείο που περιέχει το καθαρισμένο κείμενο. |
-| **Agent** | AI βοηθός που υποστηρίζει την ανάπτυξη ή την τεκμηρίωση του project. Δεν γράφει απευθείας production κώδικα χωρίς έγκριση. |
-| **QA (Quality Assurance)** | Έλεγχος ποιότητας — διαδικασία όπου ελέγχεται αν τηρούνται τα standards του `coding_standards.md`. |
-| **Blueprint** | Το κεντρικό πλάνο λειτουργίας κάθε component στο project, όπως καταγράφεται στο `blueprint-index.md`. |
-| **Commit Flow** | Η καθιερωμένη διαδικασία commit, test, vet, push, όπως ορίζεται στα standards. |
-| **Docstring** | Περιγραφικό σχόλιο στην αρχή κάθε αρχείου `.go` που εξηγεί τη λειτουργία του. |
-| **Refactor** | Αναδόμηση κώδικα χωρίς αλλαγή συμπεριφοράς, για καθαρότερο και πιο αποδοτικό αποτέλεσμα. |
+TermDescriptionPipelineThe sequence of functions applied consecutively to transform the text.TransformationA specific text-processing operation (e.g., hex to decimal, quote correction).TokenA data unit in the pipeline — typically a word or symbol produced by tokenize().Input FileThe initial file containing the unprocessed text.Output FileThe final file containing the cleaned text.AgentAn AI assistant that supports project development or documentation. Does not modify production code without approval.QA (Quality Assurance)Quality control — the process ensuring that the standards in coding_standards.md are followed.BlueprintThe central operational plan for each project component, as documented in blueprint-index.md.Commit FlowThe standardized sequence of commit, test, vet, and push actions defined in the coding standards.DocstringA descriptive comment at the beginning of each .go file explaining its purpose.RefactorCode restructuring without altering behavior, aiming for cleaner and more efficient results.
 
----
+⚙️ Abbreviations
 
-## ⚙️ Συντομογραφίες
+AbbreviationMeaningTDDTest Driven Development — developing code based on tests first.AIArtificial Intelligence.FCSFunctional Component Specification — a technical analysis of a functional module.READMEA file that provides an overview of the project, usage instructions, and dependencies.Go VetA static analysis tool that detects suspicious patterns in Go code.
 
-| Συντομογραφία | Ερμηνεία |
-|---------------|----------|
-| **TDD** | Test Driven Development — ανάπτυξη με βάση τα tests. |
-| **AI** | Artificial Intelligence (τεχνητή νοημοσύνη). |
-| **FCS** | Functional Component Specification — τεχνική ανάλυση λειτουργικού module. |
-| **README** | Αρχείο που περιγράφει συνοπτικά το project, τις οδηγίες χρήσης και τις εξαρτήσεις. |
-| **Go Vet** | Εργαλείο στατικής ανάλυσης που εντοπίζει ύποπτα patterns στον κώδικα Go. |
+🧠 Example of Concepts in Code
 
----
-
-## 🧠 Παράδειγμα Εννοιών μέσα στον Κώδικα
-
-```go
 text, err := readInput("input.txt")
 tokens := tokenize(text)
 cleaned := applyTransformations(tokens)
 writeOutput(cleaned, "output.txt")
 
-🪶 Συμβουλή για Agents & Developers
 
-Όταν δημιουργείται νέα συνάρτηση, module ή term, πρέπει να προστίθεται εδώ με σαφή περιγραφή.
-Το glossary.md είναι ο ζωντανός οδηγός κατανόησης του project.
+🪶 Tip for Agents & Developers
+
+Whenever a new function, module, or term is created, it must be added here with a clear description.
+The glossary.md serves as the living guide to understanding the project.
