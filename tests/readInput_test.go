@@ -7,43 +7,43 @@ import (
 )
 
 func TestReadInput(t *testing.T) {
-	tmpFile, err := os.CreateTemp("", "input_*.txt") // Δημιουργούμε προσωρινό αρχείο για το test
+	tmpFile, err := os.CreateTemp("", "input_*.txt") // Create a temporary file for the test
 	if err != nil {
-		t.Fatalf("❌ Αποτυχία δημιουργίας προσωρινού αρχείου: %v", err) // Διαγράφουμε το αρχείο μετά το τέλος του test
+		t.Fatalf("❌ Failed to create temporary file: %v", err) // Delete the file after the test finishes
 	}
 	defer os.Remove(tmpFile.Name())
 
-	// Γράφουμε μέσα του ένα απλό περιεχόμενο για δοκιμή
+	// Write simple content into it for testing
 	content := "Hello, Go Reloaded!"
 	tmpFile.WriteString(content)
 	tmpFile.Close()
 
-	// Καλούμε τη συνάρτηση readInput από το pipeline
+	// Call the readInput function from the pipeline
 	result, err := pipeline.ReadInput(tmpFile.Name())
 
-	// Ελέγχουμε αν επιστράφηκε error (δεν θα έπρεπε)
+	// Check if an error was returned (there shouldn't be one)
 	if err != nil {
-		t.Fatalf("❌ Αναπάντεχο error: %v", err)
+		t.Fatalf("❌ Unexpected error: %v", err)
 	}
 
-	// Ελέγχουμε αν το αποτέλεσμα είναι το ίδιο με το αρχικό περιεχόμενο
+	// Verify that the result matches the original content
 	if result != content {
-		t.Errorf("❌ Αναμενόμενο '%s', έλαβα '%s'", content, result)
+		t.Errorf("❌ Expected '%s', receive '%s'", content, result)
 	}
 
-	// Αν φτάσει εδώ, όλα πήγαν καλά
-	t.Logf("✅ Το readInput διάβασε σωστά το αρχείο: %s", tmpFile.Name())
+	// If execution reaches this point, everything went well
+	t.Logf("✅ The readInput read the file correctly : %s", tmpFile.Name())
 }
 
-// TestReadInput_FileNotFound ελέγχει τη συμπεριφορά όταν το αρχείο δεν υπάρχει
+// TestReadInput_FileNotFound checks the behavior when the file does not exist
 func TestReadInput_FileNotFound(t *testing.T) {
-	// Καλούμε τη συνάρτηση με path που δεν υπάρχει
+	// Call the function with a non-existent path
 	_, err := pipeline.ReadInput("non_existing_file.txt")
 
-	// Αν δεν επιστρέψει error, αποτυγχάνει το test
+	// If it doesn't return an error, the test fails
 	if err == nil {
-		t.Errorf("❌ Αναμενόταν σφάλμα για ανύπαρκτο αρχείο, αλλά δεν ελήφθη.")
+		t.Errorf("❌ An error was expected for a non-existent file, but none was received.")
 	} else {
-		t.Logf("✅ Ο χειρισμός ανύπαρκτου αρχείου λειτουργεί σωστά: %v", err)
+		t.Logf("✅ the non_existent file handling works correctly: %v", err)
 	}
 }
