@@ -7,7 +7,7 @@ import (
 )
 
 func TestTokenize_SimpleWords(t *testing.T) {
-	input := "Hello world"
+	input := []string{"Hello world"}
 	expected := []string{"Hello", "world"}
 
 	result := pipeline.Tokenize(input)
@@ -17,7 +17,7 @@ func TestTokenize_SimpleWords(t *testing.T) {
 	}
 }
 func TestTokenize_Punctuation(t *testing.T) {
-	input := "Hello, world!"
+	input := []string{"Hello, world!"}
 	expected := []string{"Hello", ",", "world", "!"}
 
 	result := pipeline.Tokenize(input)
@@ -28,7 +28,7 @@ func TestTokenize_Punctuation(t *testing.T) {
 }
 
 func TestTokenize_MixedTags(t *testing.T) {
-	input := "Go (up) to the 10 (hex) level"
+	input := []string{"Go (up) to the 10 (hex) level"}
 	expected := []string{"Go", "(up)", "to", "the", "10", "(hex)", "level"}
 
 	result := pipeline.Tokenize(input)
@@ -39,7 +39,7 @@ func TestTokenize_MixedTags(t *testing.T) {
 }
 
 func TestTokenize_EmptyString(t *testing.T) {
-	input := ""
+	input := []string{""}
 	expected := []string{}
 
 	result := pipeline.Tokenize(input)
