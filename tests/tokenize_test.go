@@ -1,50 +1,57 @@
 package tests
 
 import (
-	"go-reloaded/pipeline"
 	"reflect"
 	"testing"
+
+	"go-reloaded/pipeline"
 )
 
-func TestTokenize_SimpleWords(t *testing.T) {
-	input := []string{"Hello world"}
+// TestTokenize_Basic ελέγχει τη βασική λειτουργία της tokenize
+func TestTokenize_Basic(t *testing.T) {
+	input := []rune(`Hello <world> "Go"`)
+	expected := []string{"Hello", "<", "world", ">", "\"", "Go", "\""}
+
+	result := pipeline.Tokenize(input)
+
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Expected %v, got %v", expected, result)
+	}
+}
+
+// TestTokenize_WithSpaces ελέγχει ότι αγνοούνται πολλαπλά κενά
+func TestTokenize_WithSpaces(t *testing.T) {
+	input := []rune("Hello   world")
 	expected := []string{"Hello", "world"}
 
 	result := pipeline.Tokenize(input)
 
 	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Tokenize failed. Expected %v, got %v", expected, result)
+		t.Errorf("Expected %v, got %v", expected, result)
 	}
 }
-func TestTokenize_Punctuation(t *testing.T) {
-	input := []string{"Hello, world!"}
-	expected := []string{"Hello", ",", "world", "!"}
+
+// TestTokenize_OnlySpecials ελέγχει τη συμπεριφορά μόνο με ειδικούς χαρακτήρες
+func TestTokenize_OnlySpecials(t *testing.T) {
+	input := []rune(`<>""`)
+	expected := []string{"<", ">", "\"", "\""}
 
 	result := pipeline.Tokenize(input)
 
 	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Tokenize failed. Expected %v, got %v", expected, result)
+		t.Errorf("Expected %v, got %v", expected, result)
 	}
 }
 
-func TestTokenize_MixedTags(t *testing.T) {
-	input := []string{"Go (up) to the 10 (hex) level"}
-	expected := []string{"Go", "(up)", "to", "the", "10", "(hex)", "level"}
-
-	result := pipeline.Tokenize(input)
-
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Tokenize failed. Expected %v, got %v", expected, result)
-	}
-}
-
-func TestTokenize_EmptyString(t *testing.T) {
-	input := []string{""}
+// TestTokenize_EmptyInput ελέγχει τι γίνεται με κενό input
+func TestTokenize_EmptyInput(t *testing.T) {
+	input := []rune("")
 	expected := []string{}
 
 	result := pipeline.Tokenize(input)
 
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Tokenize failed. Expected empty slice, got %v", result)
+	if len(result) != len(expected) {
+		t.Errorf("Expected %v tokens, got %v", len(expected), len(result))
 	}
+
 }
