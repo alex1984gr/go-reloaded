@@ -1,49 +1,42 @@
 package tests
 
 import (
-	"go-reloaded/pipeline"
+	"strings"
 	"testing"
+
+	"go-reloaded/pipeline"
 )
 
-func TestReplaceBin_ValidBinary(t *testing.T) {
-	input := []string{"The", "value", "is", "10", "(bin)"}
-	expected := []string{"The", "value", "is", "2"}
-	result := pipeline.ReplaceBin(input)
+func TestReplaceBin(t *testing.T) {
+	input := []string{"1010", "και", "110"}
+	joined := strings.Join(input, " ")
+	expected := "10 και 6"
 
-	if len(result) != len(expected) {
-		t.Fatalf("Expected length%d, got %d", len(expected), len(result))
-	}
-	for i := range expected {
-		if result[i] != expected[i] {
-			t.Errorf("Expected %v, got %v", expected[i], result[i])
-		}
+	result := pipeline.ReplaceBin(joined)
+
+	if result != expected {
+		t.Errorf("Expected '%v', got '%v'", expected, result)
 	}
 }
-func TestReblaceBin_InvalidBinary(t *testing.T) {
-	input := []string{"This", "is", "not", "a", "2", "(bin)"}
-	expected := []string{"This", "is", "not", "a", "2"}
-	result := pipeline.ReplaceBin(input)
+func TestReplaceBin_NoBinary(t *testing.T) {
+	input := []string{"Καλημέρα", "κόσμε"}
+	joined := strings.Join(input, " ")
+	expected := "Καλημέρα κόσμε"
 
-	if len(result) != len(expected) {
-		t.Fatalf("Expected %d, got %d", len(expected), len(result))
-	}
-	for i := range expected {
-		if result[i] != expected[i] {
-			t.Errorf("Expected %v, got %v", expected[i], result[i])
-		}
+	result := pipeline.ReplaceBin(joined)
+
+	if result != expected {
+		t.Errorf("Expected '%v', got '%v'", expected, result)
 	}
 }
-func TestReplaceBIn_NoBinTag(t *testing.T) {
-	input := []string{"Hello", "world"}
-	expected := []string{"Hello", "world"}
-	result := pipeline.ReplaceBin(input)
+func TestReplaceBin_Mixed(t *testing.T) {
+	input := []string{"Το", "101", "είναι", "binary", "για", "5"}
+	joined := strings.Join(input, " ")
+	expected := "Το 5 είναι binary για 5"
 
-	if len(result) != len(expected) {
-		t.Fatalf("Expected length %d, got %d", len(expected), len(result))
-	}
-	for i := range expected {
-		if result[i] != expected[i] {
-			t.Errorf("Expected %v, got %v", expected[i], result[i])
-		}
+	result := pipeline.ReplaceBin(joined)
+
+	if result != expected {
+		t.Errorf("Expected '%v', got '%v'", expected, result)
 	}
 }
