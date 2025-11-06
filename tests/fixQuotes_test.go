@@ -1,11 +1,12 @@
 package tests
 
-import(
-	"testing"
+import (
 	"go-reloaded/pipeline"
+	"testing"
 )
-func TestFixQuotes_Simple(t *testing.T){
-	input := []string{'\"', "Hello", "world", '\"'}
+
+func TestFixQuotes_Simple(t *testing.T) {
+	input := []string{"\"", "Hello", "world", "\""}
 	expected := []string{"\"Hello World\""}
 	result := pipeline.FixQuotes(input)
 
@@ -13,25 +14,25 @@ func TestFixQuotes_Simple(t *testing.T){
 		t.Fatalf("Expected %d results, got %d", len(expected), len(result))
 	}
 	for i := range result {
-		if result[i] != expected[i]{
+		if result[i] != expected[i] {
 			t.Errorf("Expected %v, got %v", expected[i], result[i])
 		}
 	}
 }
-func TestFixQuotes_Unmatched(t *testing.T){
+func TestFixQuotes_Unmatched(t *testing.T) {
 	input := []string{"Hello", "\"World\""}
-	expected := []string{"Hello","\"World\""}
+	expected := []string{"Hello", "\"World\""}
 	result := pipeline.FixQuotes(input)
 	if len(result) != len(expected) {
 		t.Fatalf("Expected %d results, got %d", len(expected), len(result))
 	}
 	for i := range result {
-		if result[i] != expected[i]{
+		if result[i] != expected[i] {
 			t.Errorf("Expected %v, got %v", expected[i], result[i])
 		}
 	}
 }
-func TestFixQuotes_NoQuotes(t *testing.T){
+func TestFixQuotes_NoQuotes(t *testing.T) {
 	input := []string{"Hello", "World"}
 	expected := []string{"Hello", "World"}
 	result := pipeline.FixQuotes(input)
@@ -43,4 +44,4 @@ func TestFixQuotes_NoQuotes(t *testing.T){
 			t.Errorf("Expected %v, got %v", expected[i], result[i])
 		}
 	}
-}	
+}
