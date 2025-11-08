@@ -46,7 +46,6 @@ func TestWriteOutput_EmptyInput(t *testing.T) {
 		t.Fatalf("Failed to read output file: %v", err)
 	}
 
-	// 👉 Εδώ προσθέτουμε τη δήλωση του content
 	content := strings.TrimSpace(string(data))
 
 	if content != "" {
