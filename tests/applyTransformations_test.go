@@ -25,7 +25,7 @@ func TestApplyTransfomations_QuotesAndCase(t *testing.T) {
 func TestApplyTransfomations_PunctuationSpacing(t *testing.T) {
 	input := []string{"Hello", ",", "world", "!"}
 	expected := []string{"Hello", "world!"}
-	result := pipeline.ApplyTransformation(input)
+	result := pipeline.ApplyTransformations(input)
 	if !reflect.DeepEqual(result, expected) {
 		t.Fatalf("Expected %v, got %v", expected, result)
 	}
@@ -33,7 +33,7 @@ func TestApplyTransfomations_PunctuationSpacing(t *testing.T) {
 func TestApplyTransformations_EmptyInput(t *testing.T) {
 	input := []string{}
 	expected := []string{}
-	result := pipeline.ApplyTransformation(input)
+	result := pipeline.ApplyTransformations(input)
 	if !reflect.DeepEqual(result, expected) {
 		t.Fatalf("Expected %v, got %v", expected, result)
 	}
