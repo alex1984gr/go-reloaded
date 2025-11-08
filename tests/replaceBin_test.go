@@ -9,34 +9,33 @@ import (
 
 func TestReplaceBin(t *testing.T) {
 	input := []string{"1010", "και", "110"}
-	joined := strings.Join(input, " ")
-	expected := "10 και 6"
+	expected := []string{"10", "και", "6"}
 
-	result := pipeline.ReplaceBin(joined)
+	result := pipeline.ReplaceBin(input)
 
-	if result != expected {
-		t.Errorf("Expected '%v', got '%v'", expected, result)
+	if strings.Join(result, " ") != strings.Join(expected, " ") {
+		t.Errorf("Expected '%v', got '%v'", strings.Join(expected, " "), strings.Join(result, " "))
 	}
 }
+
 func TestReplaceBin_NoBinary(t *testing.T) {
 	input := []string{"Καλημέρα", "κόσμε"}
-	joined := strings.Join(input, " ")
-	expected := "Καλημέρα κόσμε"
+	expected := []string{"Καλημέρα", "κόσμε"}
 
-	result := pipeline.ReplaceBin(joined)
+	result := pipeline.ReplaceBin(input)
 
-	if result != expected {
-		t.Errorf("Expected '%v', got '%v'", expected, result)
+	if strings.Join(result, " ") != strings.Join(expected, " ") {
+		t.Errorf("Expected '%v', got '%v'", strings.Join(expected, " "), strings.Join(result, " "))
 	}
 }
+
 func TestReplaceBin_Mixed(t *testing.T) {
 	input := []string{"Το", "101", "είναι", "binary", "για", "5"}
-	joined := strings.Join(input, " ")
-	expected := "Το 5 είναι binary για 5"
+	expected := []string{"Το", "5", "είναι", "binary", "για", "5"}
 
-	result := pipeline.ReplaceBin(joined)
+	result := pipeline.ReplaceBin(input)
 
-	if result != expected {
-		t.Errorf("Expected '%v', got '%v'", expected, result)
+	if strings.Join(result, " ") != strings.Join(expected, " ") {
+		t.Errorf("Expected '%v', got '%v'", strings.Join(expected, " "), strings.Join(result, " "))
 	}
 }
