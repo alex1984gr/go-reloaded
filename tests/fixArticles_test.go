@@ -1,4 +1,4 @@
-package TestFixQuotes_Simple
+package tests
 
 import (
 	"go-reloade/pipeline"
@@ -7,7 +7,7 @@ import (
 )
 
 func TestFixArticles(t *testing.T) {
-	test := []struct {
+	tests := []struct {
 		name     string
 		input    []string
 		expected []string
