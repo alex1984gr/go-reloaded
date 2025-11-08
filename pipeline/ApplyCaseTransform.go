@@ -6,7 +6,7 @@ import (
 
 // ApplyCaseTransform applies the selected case transformation ("upper", "lower", "capitalize", "none")
 // to each string in the input slice and returns the transformed slice.
-func ApplyCaseTranform(input []string, option string) []string {
+func ApplyCaseTransform(input []string, option string) []string {
 	result := make([]string, len(input))
 	for i, word := range input {
 		switch strings.ToLower(option) {
