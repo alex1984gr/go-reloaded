@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"go-reloade/pipeline"
+	"go-reloaded/pipeline"
 	"reflect"
 	"testing"
 )
