@@ -2,4 +2,4 @@ module go-reloaded
 
 go 1.25.1
 
-require golang.org/x/text v0.30.0 // indirect
+require golang.org/x/text v0.30.0
