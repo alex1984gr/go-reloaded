@@ -1,27 +1,33 @@
 package pipeline
 
+import (
+	"fmt"
+)
+
+// ApplyTransformations applies all transformations to a slice of tokens
 func ApplyTransformations(tokens []string) []string {
 	if len(tokens) == 0 {
 		return tokens
 	}
 
-	// 1️⃣ Fix articles (a → an)
+	fmt.Println("DEBUG: Original tokens:", tokens)
 	tokens = FixArticles(tokens)
+	fmt.Println("DEBUG: After FixArticles:", tokens)
 
-	// 2️⃣ Fix quotes (words inside quotes to uppercase)
 	tokens = FixQuotes(tokens)
+	fmt.Println("DEBUG: After FixQuotes:", tokens)
 
-	// 3️⃣ Replace binary numbers with decimals
 	tokens = ReplaceBin(tokens)
+	fmt.Println("DEBUG: After ReplaceBin:", tokens)
 
-	// 4️⃣ Replace hex numbers with decimals
 	tokens = ReplaceHex(tokens)
+	fmt.Println("DEBUG: After ReplaceHex:", tokens)
 
-	// 5️⃣ Apply case transformation (capitalize words outside quotes, keep inside quotes)
 	tokens = ApplyCaseTransform(tokens)
+	fmt.Println("DEBUG: After ApplyCaseTransform:", tokens)
 
-	// 6️⃣ Format punctuation (remove spaces before .,!? etc.)
 	tokens = FormatPunctuation(tokens)
+	fmt.Println("DEBUG: After FormatPunctuation:", tokens)
 
 	return tokens
 }
