@@ -5,35 +5,44 @@ import (
 	"unicode"
 )
 
+// ApplyCaseTransform εφαρμόζει σωστά κεφαλαία και μικρά ανάλογα με quotes
 func ApplyCaseTransform(tokens []string) []string {
-	inQuotes := false
 	result := make([]string, len(tokens))
+	inQuotes := false
 
-	for i, tok := range tokens {
-		// Αν η λέξη είναι quote
-		if tok == `"` {
+	for i, token := range tokens {
+		switch token {
+		case `"`:
 			inQuotes = !inQuotes
-			result[i] = tok
-			continue
-		}
-
-		// Αν είμαστε μέσα σε quotes, κάνουμε όλα τα γράμματα uppercase
-		if inQuotes {
-			result[i] = strings.ToUpper(tok)
-		} else {
-			// Κανονικό capitalize: πρώτο γράμμα κεφαλαίο, υπόλοιπα μικρά
-			if len(tok) > 0 {
-				runes := []rune(tok)
-				runes[0] = unicode.ToUpper(runes[0])
-				for j := 1; j < len(runes); j++ {
-					runes[j] = unicode.ToLower(runes[j])
-				}
-				result[i] = string(runes)
+			result[i] = token
+		default:
+			if inQuotes {
+				result[i] = toUpper(token)
 			} else {
-				result[i] = tok
+				result[i] = capitalizeWord(token)
 			}
 		}
 	}
-
 	return result
+}
+
+// capitalizeWord: κεφαλαιοποιεί μόνο την πρώτη γράμμα της λέξης
+func capitalizeWord(token string) string {
+	if token == "" {
+		return ""
+	}
+
+	runes := []rune(token)
+	runes[0] = unicode.ToUpper(runes[0])
+	for i := 1; i < len(runes); i++ {
+		runes[i] = unicode.ToLower(runes[i])
+	}
+	return string(runes)
+}
+
+// toUpper: μετατρέπει όλα τα γράμματα σε κεφαλαία
+func toUpper(token string) string {
+	return strings.Map(func(r rune) rune {
+		return unicode.ToUpper(r)
+	}, token)
 }
