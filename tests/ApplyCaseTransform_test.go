@@ -1,40 +1,56 @@
 package tests
 
 import (
-	"go-reloaded/pipeline"
+	"reflect"
 	"testing"
+
+	"go-reloaded/pipeline"
 )
 
-func TestApllyCaseTransform_upper(t *testing.T) {
-	input := []string{"Hello", "world"}
-	expected := []string{"HELLO", "WORLD"}
-	result := pipeline.ApplyCaseTransform(input, "upper")
-	if len(result) != len(expected) {
-		t.Fatalf("Expected %d results, got %d", len(expected), len(result))
+func TestApplyCaseTransform(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  []string
+		expect []string
+	}{
+		{
+			name:   "Basic capitalization",
+			input:  []string{"hello", "world"},
+			expect: []string{"Hello", "World"},
+		},
+		{
+			name:   "Upper inside quotes",
+			input:  []string{`She`, `said`, `"`, `hi`, `"`, `there`},
+			expect: []string{"She", "Said", `"`, "HI", `"`, "There"},
+		},
+		{
+			name:   "Lower inside quotes",
+			input:  []string{`She`, `said`, `"`, `HI`, `"`, `there`},
+			expect: []string{"She", "Said", `"`, "HI", `"`, "There"},
+		},
+		{
+			name:   "Empty input",
+			input:  []string{},
+			expect: []string{},
+		},
+		{
+			name:   "No quotes",
+			input:  []string{"go", "lang"},
+			expect: []string{"Go", "Lang"},
+		},
+		{
+			name:   "Mixed quotes and normal words",
+			input:  []string{`this`, `"`, `is`, `"`, `test`},
+			expect: []string{"This", `"`, "IS", `"`, "Test"},
+		},
 	}
-	for i := range result {
-		if result[i] != expected[i] {
-			t.Errorf("Expected '%v', got '%v'", expected[i], result[i])
-		}
-	}
-}
-func TestApllyCaseTransform_Capitalize(t *testing.T) {
-	input := []string{"hello", "world"}
-	expected := []string{"Hello", "World"}
-	result := pipeline.ApplyCaseTransform(input, "capitalize")
-	for i := range result {
-		if result[i] != expected[i] {
-			t.Errorf("Expected '%v', got '%v'", expected[i], result[i])
-		}
-	}
-}
-func TestApllyCaseTransform_Mixed(t *testing.T) {
-	input := []string{"TeSt", "WoRd"}
-	expected := []string{"TeSt", "WoRd"}
-	result := pipeline.ApplyCaseTransform(input, "unknown")
-	for i := range result {
-		if result[i] != expected[i] {
-			t.Errorf("Expected '%v', got '%v'", expected[i], result[i])
-		}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := pipeline.ApplyCaseTransform(tt.input)
+			if !reflect.DeepEqual(result, tt.expect) {
+				t.Errorf("ApplyCaseTransform() = %v, want %v", result, tt.expect)
+			}
+		})
 	}
 }
