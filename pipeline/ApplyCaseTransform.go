@@ -2,29 +2,38 @@ package pipeline
 
 import (
 	"strings"
+	"unicode"
 )
 
-// ApplyCaseTransform applies the selected case transformation ("upper", "lower", "capitalize", "none")
-// to each string in the input slice and returns the transformed slice.
-func ApplyCaseTransform(input []string, option string) []string {
-	result := make([]string, len(input))
-	for i, word := range input {
-		switch strings.ToLower(option) {
-		case "upper":
-			result[i] = strings.ToUpper(word)
-		case "lower":
-			result[i] = strings.ToLower(word)
-		case "capitalize": // capitalize first letter, keep the rest lowercase
-			if len(word) > 0 {
-				result[i] = strings.ToUpper(string(word[0])) + strings.ToLower(word[1:])
+func ApplyCaseTransform(tokens []string) []string {
+	inQuotes := false
+	result := make([]string, len(tokens))
+
+	for i, tok := range tokens {
+		// Αν η λέξη είναι quote
+		if tok == `"` {
+			inQuotes = !inQuotes
+			result[i] = tok
+			continue
+		}
+
+		// Αν είμαστε μέσα σε quotes, κάνουμε όλα τα γράμματα uppercase
+		if inQuotes {
+			result[i] = strings.ToUpper(tok)
+		} else {
+			// Κανονικό capitalize: πρώτο γράμμα κεφαλαίο, υπόλοιπα μικρά
+			if len(tok) > 0 {
+				runes := []rune(tok)
+				runes[0] = unicode.ToUpper(runes[0])
+				for j := 1; j < len(runes); j++ {
+					runes[j] = unicode.ToLower(runes[j])
+				}
+				result[i] = string(runes)
 			} else {
-				result[i] = word
+				result[i] = tok
 			}
-		case "none":
-			result[i] = word
-		default: // if the option is unknown, return the word unchanged
-			result[i] = word
 		}
 	}
+
 	return result
 }
