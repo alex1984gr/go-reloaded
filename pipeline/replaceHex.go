@@ -1,9 +1,9 @@
-package pipeline // Defines the package name
+package pipeline
 
 import (
-	"fmt"     // For formatted output (used with Sprintf)
-	"regexp"  // For working with regular expressions
-	"strconv" // For string to number conversion
+	"fmt"
+	"regexp"
+	"strconv"
 )
 
 // ReplaceHex replaces hexadecimal numbers (like "1E (hex)") with their decimal equivalents
