@@ -1,27 +1,26 @@
 package pipeline
 
-import "strings"
+import (
+	"strings"
+)
 
-func FixQuotes(input []string) []string {
-	result := []string{}
-	openQuote := false
-	for _, token := range input {
-		trimmed := strings.TrimSpace(token)
-		if strings.Contains(trimmed, "\"") || strings.Contains(trimmed, "'") {
-			if openQuote {
-				if len(result) > 0 {
-					last := result[len(result)-1]
-					result[len(result)-1] = strings.TrimSpace(last + " " + trimmed)
-				} else {
-					result = append(result, trimmed)
-				}
-				openQuote = false
-			} else {
-				result = append(result, trimmed)
-				openQuote = true
-			}
+// FixQuotes παίρνει ένα slice από tokens και μετατρέπει όλα τα
+// words μέσα σε εισαγωγικά σε κεφαλαία.
+
+func FixQuotes(tokens []string) []string {
+	inQuotes := false
+	result := make([]string, len(tokens))
+
+	for i, tok := range tokens {
+		if tok == `"` {
+			inQuotes = !inQuotes
+			result[i] = tok
+			continue
+		}
+		if inQuotes {
+			result[i] = strings.ToUpper(tok)
 		} else {
-			result = append(result, trimmed)
+			result[i] = tok
 		}
 	}
 	return result
