@@ -1,29 +1,30 @@
 package pipeline
 
-import "strings"
-
-func FormatPunctuation(tokens []string) []string {
-	if len(tokens) == 0 {
+func FormatPunctuation(tokens []string) []string { // Function that formats punctuation tokens correctly
+	if len(tokens) == 0 { // If there are no tokens, just return them as-is
 		return tokens
 	}
-	result := []string{}
-	for i, token := range tokens {
-		if isPunctuation(token) && len(result) > 0 {
-			result[len(result)-1] += token
-		} else if i > 0 && isPunctuation(tokens[i-1]) {
-			result = append(result, token)
-		} else {
-			result = append(result, token)
+
+	var result []string            // Slice to store the processed tokens
+	for _, token := range tokens { // Loop through each token in the input
+		if token == " " { // If the token is just a space
+			continue // Skip it
+		}
+		if isPunctuation(token) && len(result) > 0 { // If the token is punctuation and there’s something before it
+			result[len(result)-1] += token // Attach the punctuation directly to the previous word (no space)
+		} else { // Otherwise, it’s a normal word or first token
+			result = append(result, token) // Add it as a new token to the result
 		}
 	}
-	output := strings.Join(result, " ")
-	return strings.Fields(output)
+
+	return result // Return the cleaned-up list of tokens
 }
-func isPunctuation(token string) bool {
-	switch token {
-	case ".", ",", "!", "?", ";", ":":
-		return true
+
+func isPunctuation(token string) bool { // Helper function to check if a token is punctuation
+	switch token { // Compare the token against known punctuation marks
+	case ".", ",", "!", "?", ";", ":": // Common punctuation symbols
+		return true // If matched, return true
 	default:
-		return false
+		return false // Otherwise, return false
 	}
 }
