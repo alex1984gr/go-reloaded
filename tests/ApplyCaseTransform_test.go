@@ -1,55 +1,85 @@
-package tests
+package tests // Test package for files in /tests folder
 
 import (
-	"reflect"
-	"testing"
+	"fmt"     // For debug printing
+	"reflect" // To compare slices
+	"testing" // Go's testing framework
 
-	"go-reloaded/pipeline"
+	"go-reloaded/pipeline" // Import the pipeline package containing ApplyCaseTransformations
 )
 
-func TestApplyCaseTransform(t *testing.T) {
+// TestApplyCaseTransformations verifies uppercase, lowercase, and capitalize transformations
+// including single-word and multi-word transformations.
+func TestApplyCaseTransformations(t *testing.T) {
 	tests := []struct {
-		name   string
-		input  []string
-		expect []string
+		name     string   // Name of the test case
+		input    []string // Input tokenized words
+		expected []string // Expected output after transformations
 	}{
 		{
-			name:   "Basic capitalization",
-			input:  []string{"hello", "world"},
-			expect: []string{"Hello", "World"},
+			name:     "Uppercase single word",
+			input:    []string{"Ready,", "set,", "go", "(up)", "!"},
+			expected: []string{"Ready,", "set,", "GO", "!"},
 		},
 		{
-			name:   "Upper inside quotes",
-			input:  []string{`She`, `said`, `"`, `hi`, `"`, `there`},
-			expect: []string{"She", "Said", `"`, "HI", `"`, "There"},
+			name:     "Lowercase single word",
+			input:    []string{"I", "should", "stop", "SHOUTING", "(low)"},
+			expected: []string{"I", "should", "stop", "shouting"},
 		},
 		{
-			name:   "Lower inside quotes",
-			input:  []string{`She`, `said`, `"`, `HI`, `"`, `there`},
-			expect: []string{"She", "Said", `"`, "HI", `"`, "There"},
+			name:     "Capitalize single word",
+			input:    []string{"Welcome", "to", "the", "brooklyn", "bridge", "(cap)"},
+			expected: []string{"Welcome", "to", "the", "brooklyn", "Bridge"}, // Fixed expected: last word before marker is capitalized
 		},
 		{
-			name:   "Empty input",
-			input:  []string{},
-			expect: []string{},
+			name:     "Uppercase multiple words",
+			input:    []string{"This", "is", "so", "exciting", "(up, 2)"},
+			expected: []string{"This", "is", "SO", "EXCITING"},
 		},
 		{
-			name:   "No quotes",
-			input:  []string{"go", "lang"},
-			expect: []string{"Go", "Lang"},
+			name:     "Lowercase multiple words",
+			input:    []string{"PLEASE", "STOP", "YELLING", "(low, 3)"},
+			expected: []string{"please", "stop", "yelling"},
 		},
 		{
-			name:   "Mixed quotes and normal words",
-			input:  []string{`this`, `"`, `is`, `"`, `test`},
-			expect: []string{"This", `"`, "IS", `"`, "Test"},
+			name:     "Capitalize multiple words",
+			input:    []string{"welcome", "to", "brooklyn", "bridge", "(cap, 2)"},
+			expected: []string{"welcome", "to", "Brooklyn", "Bridge"},
+		},
+		{
+			name:     "No marker",
+			input:    []string{"No", "changes", "here"},
+			expected: []string{"No", "changes", "here"},
+		},
+		{
+			name:     "Marker at beginning does nothing",
+			input:    []string{"(up)", "hello"},
+			expected: []string{"hello"},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := pipeline.ApplyCaseTransform(tt.input)
-			if !reflect.DeepEqual(result, tt.expect) {
-				t.Errorf("ApplyCaseTransform() = %v, want %v", result, tt.expect)
+			// Debug: show test case name
+			fmt.Printf("\n[DEBUG] Running test: %s\n", tt.name)
+			// Debug: show input tokens
+			fmt.Printf("[DEBUG] Input tokens: %v\n", tt.input)
+
+			// Call the function being tested
+			result := pipeline.ApplyCaseTransformations(tt.input)
+
+			// Debug: show output tokens
+			fmt.Printf("[DEBUG] Output tokens:   %v\n", result)
+			// Debug: show expected tokens
+			fmt.Printf("[DEBUG] Expected tokens: %v\n", tt.expected)
+
+			// Compare result with expected
+			if !reflect.DeepEqual(result, tt.expected) {
+				// If not equal, fail the test
+				t.Errorf("\n❌ Test failed: %s\nExpected: %v\nGot:      %v", tt.name, tt.expected, result)
+			} else {
+				// Otherwise, success message
+				fmt.Printf("✅ Test passed: %s\n", tt.name)
 			}
 		})
 	}
