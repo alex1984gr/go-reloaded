@@ -20,7 +20,7 @@ func ApplyTransformations(tokens []string) []string {
 	tokens = ReplaceHex(tokens)
 	fmt.Printf("DEBUG: After ReplaceHex: %v\n", tokens)
 
-	tokens = ApplyCaseTransform(tokens)
+	tokens = ApplyCaseTransformations(tokens)
 	fmt.Printf("DEBUG: After ApplyCaseTransform: %v\n", tokens)
 
 	tokens = FormatPunctuation(tokens)
