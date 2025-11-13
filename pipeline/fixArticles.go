@@ -1,59 +1,55 @@
 package pipeline // Defines the package name
 
 import (
-	"strings" // Import strings package for basic string operations
+	"strings" // For string operations
 
-	"golang.org/x/text/cases"    // Import for proper Unicode-aware capitalization
-	"golang.org/x/text/language" // Import for language settings
+	"golang.org/x/text/cases"    // For proper Unicode-aware capitalization
+	"golang.org/x/text/language" // For language settings
 )
 
-// FixArticles adjusts "a"/"an" depending on the next word.
-// Preserves capitalization if the original article was capitalized.
+// FixArticles converts "a" to "an" if the next word starts with a vowel or 'h'.
+// Preserves capitalization of the original article.
 func FixArticles(words []string) []string {
-	if len(words) == 0 { // If the input slice is empty
-		return words // Return it unchanged
+	if len(words) == 0 { // Return empty slice if input is empty
+		return words
 	}
 
-	result := make([]string, len(words)) // Create a new slice to hold results
-	copy(result, words)                  // Copy original words into the result slice
+	result := make([]string, len(words)) // Prepare output slice
+	copy(result, words)                  // Copy input to result
 
-	caser := cases.Title(language.English) // Create a Title-caser for proper capitalization
+	caser := cases.Title(language.English) // Title-caser for capitalized articles
 
-	for i := 0; i < len(result)-1; i++ { // Loop through all words except the last
-		original := result[i]             // Store the original article word
-		word := strings.ToLower(original) // Lowercase version for comparison
-		next := result[i+1]               // Get the next word
+	for i := 0; i < len(result)-1; i++ { // Loop through all words except last
+		original := result[i]             // Store the current word
+		word := strings.ToLower(original) // Lowercase for comparison
+		next := result[i+1]               // Get next word
 
-		if word == "a" || word == "an" { // If the current word is an article
-			article := "a"                // Default to "a"
-			if startsWithVowelOrH(next) { // Check if next word starts with vowel or silent H
-				article = "an" // Use "an" if needed
+		// Only care about "a" (or capitalized "A")
+		if word == "a" {
+			article := "a" // Default
+
+			// If next word starts with vowel or 'h', use "an"
+			if startsWithVowelOrH(next) {
+				article = "an"
 			}
 
-			// Preserve capitalization if original article was capitalized
+			// Preserve capitalization
 			if len(original) > 0 && original[0] >= 'A' && original[0] <= 'Z' {
-				article = caser.String(article) // Capitalize using x/text/cases
+				article = caser.String(article)
 			}
 
-			result[i] = article // Replace the article in the result slice
+			result[i] = article // Replace in result
 		}
 	}
 
-	return result // Return the modified slice of words
+	return result
 }
 
-// startsWithVowelOrH checks if the word starts with a vowel or a silent H
+// startsWithVowelOrH checks if a word starts with a vowel or 'h'
 func startsWithVowelOrH(s string) bool {
-	if s == "" { // If the string is empty
-		return false // Return false
+	if s == "" {
+		return false
 	}
-	s = strings.ToLower(s) // Convert string to lowercase for comparison
-
-	// Handle special silent H words
-	if strings.HasPrefix(s, "hour") || strings.HasPrefix(s, "honest") || strings.HasPrefix(s, "honor") {
-		return true // Treat as starting with vowel
-	}
-
-	first := s[0]                                     // Get the first character
-	return strings.ContainsRune("aeiou", rune(first)) // Return true if it's a vowel
+	first := strings.ToLower(string(s[0])) // Lowercase first character
+	return strings.Contains("aeiouh", first)
 }
