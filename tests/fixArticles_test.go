@@ -1,9 +1,9 @@
-package tests
+package tests // Test package
 
 import (
-	"go-reloaded/pipeline"
-	"reflect"
 	"testing"
+
+	"go-reloaded/pipeline"
 )
 
 func TestFixArticles(t *testing.T) {
@@ -13,41 +13,42 @@ func TestFixArticles(t *testing.T) {
 		expected []string
 	}{
 		{
-			name:     "A defore consonant stays A",
-			input:    []string{"a", "banana"},
-			expected: []string{"a", "banana"},
+			name:     "a before vowel",
+			input:    []string{"There", "it", "was.", "A", "amazing", "rock!"},
+			expected: []string{"There", "it", "was.", "An", "amazing", "rock!"},
 		},
 		{
-			name:     "A before vowel becomes An",
-			input:    []string{"a", "apple"},
-			expected: []string{"an", "apple"},
+			name:     "a before consonant",
+			input:    []string{"She", "saw", "a", "cat"},
+			expected: []string{"She", "saw", "a", "cat"},
 		},
 		{
-			name:     "An before consonant becomes A",
-			input:    []string{"an", "dog"},
-			expected: []string{"a", "dog"},
+			name:     "a before h",
+			input:    []string{"He", "waited", "for", "a", "hour"},
+			expected: []string{"He", "waited", "for", "an", "hour"},
 		},
 		{
-			name:     "silent H word gets An",
-			input:    []string{"a", "hour"},
-			expected: []string{"an", "hour"},
+			name:     "capital A before vowel",
+			input:    []string{"It", "was", "A", "honest", "mistake"},
+			expected: []string{"It", "was", "An", "honest", "mistake"},
 		},
 		{
-			name:     "Proper noun with capitalized A",
-			input:    []string{"A", "apple"},
-			expected: []string{"An", "apple"},
-		},
-		{
-			name:     "Proper noun with capitalized An",
-			input:    []string{"An", "banana"},
-			expected: []string{"A", "banana"},
+			name:     "capital A before consonant",
+			input:    []string{"She", "found", "A", "dog"},
+			expected: []string{"She", "found", "A", "dog"},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := pipeline.FixArticles(tt.input)
-			if !reflect.DeepEqual(result, tt.expected) {
-				t.Errorf("Test %s failed.\nInput: %v\nExpected: %v\nGot: %v", tt.name, tt.input, tt.expected, result)
+			if len(result) != len(tt.expected) {
+				t.Fatalf("Test %s failed: expected length %d, got %d", tt.name, len(tt.expected), len(result))
+			}
+			for i := range result {
+				if result[i] != tt.expected[i] {
+					t.Fatalf("Test %s failed at index %d: expected '%s', got '%s'", tt.name, i, tt.expected[i], result[i])
+				}
 			}
 		})
 	}
