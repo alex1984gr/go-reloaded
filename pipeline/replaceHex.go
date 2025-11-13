@@ -2,32 +2,41 @@ package pipeline
 
 import (
 	"fmt"
-	"regexp"
 	"strconv"
+	"strings"
 )
 
-// ReplaceHex replaces hexadecimal numbers (like "1E (hex)") with their decimal equivalents
-func ReplaceHex(lines []string) []string {
-	re := regexp.MustCompile(`\b([0-9A-Fa-f]+)\s*\(hex\)`) // Matches tokens like "1E (hex)" or "FF(hex)"
+// ReplaceHex scans through all tokens and whenever it finds "(hex)",
+// it replaces the *previous word* (which is always a hexadecimal number)
+// with its decimal equivalent.
+func ReplaceHex(tokens []string) []string {
+	var result []string // Holds the final list of processed tokens
 
-	var result []string // This will hold the processed output lines
+	for i := 0; i < len(tokens); i++ { // Iterate through each token
+		token := tokens[i]
 
-	for _, line := range lines { // Iterate through each line in the input
-		converted := re.ReplaceAllStringFunc(line, func(match string) string { // For each hex match found, apply a conversion
-			hexMatch := regexp.MustCompile(`^[0-9A-Fa-f]+`).FindString(match) // Extract only the hexadecimal part before "(hex)"
-			if hexMatch == "" {                                               // If no valid hex number found
-				return match // Return the original text unchanged
+		// Check if the current token is "(hex)"
+		if strings.EqualFold(token, "(hex)") {
+			// Make sure there's a previous word to convert
+			if len(result) > 0 {
+				// Take the last word added to the result slice
+				hexWord := result[len(result)-1]
+
+				// Try converting it from hexadecimal (base 16) to decimal (base 10)
+				value, err := strconv.ParseInt(hexWord, 16, 64)
+				if err == nil {
+					// If conversion succeeded, replace the previous word with the decimal number
+					result[len(result)-1] = fmt.Sprintf("%d", value)
+				}
 			}
+			// Skip adding "(hex)" itself to the result
+			continue
+		}
 
-			decValue, err := strconv.ParseInt(hexMatch, 16, 64) // Convert from base 16 (hex) to base 10 (decimal)
-			if err != nil {                                     // If conversion fails
-				return match // Keep the original match
-			}
-
-			return fmt.Sprintf("%d", decValue) // Return the converted decimal number as a string
-		})
-		result = append(result, converted) // Add the converted line to the final result
+		// If it's a normal word, just add it to the result
+		result = append(result, token)
 	}
 
-	return result // Return the list of processed lines
+	// Return the transformed list of tokens
+	return result
 }
