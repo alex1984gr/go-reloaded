@@ -1,21 +1,38 @@
-package pipeline
+package pipeline // This file belongs to the "pipeline" package
 
 import (
-	"regexp"
-	"strconv"
+	"fmt"     // Used for debug printing if needed
+	"strconv" // Needed to parse binary strings to integers
+	"strings" // Needed for string comparison
 )
 
-// ReplaceBin scans through a slice of strings and replaces any binary number with its decimal equivalent.
-func ReplaceBin(input []string) []string {
-	re := regexp.MustCompile(`\b[01]+\b`) // Create a regular expression that matches binary numbers (only 0s and 1s, as whole words)
+// ReplaceBin scans tokens for "(bin)" markers and converts the previous token
+// from binary (base 2) to decimal (base 10). Invalid binaries are ignored.
+func ReplaceBin(tokens []string) []string {
+	var result []string // Holds the processed tokens
 
-	for i, word := range input { // Loop through every element in the input slice
-		input[i] = re.ReplaceAllStringFunc(word, func(bin string) string { // Apply a function to every substring matching the regex
-			if val, err := strconv.ParseInt(bin, 2, 64); err == nil { // Try to convert the binary string 'bin' to an integer (base 2)
-				return strconv.FormatInt(val, 10) // If successful, convert that integer to a decimal string and return it
+	for i := 0; i < len(tokens); i++ { // Iterate through each token
+		token := tokens[i]
+
+		// Check if the current token is "(bin)" (case-insensitive)
+		if strings.EqualFold(token, "(bin)") {
+			if len(result) > 0 { // Make sure there is a previous token to convert
+				binWord := result[len(result)-1] // Get the previous token
+
+				// Try converting from binary string to decimal integer
+				value, err := strconv.ParseInt(binWord, 2, 64)
+				if err == nil { // Conversion succeeded
+					result[len(result)-1] = fmt.Sprintf("%d", value) // Replace with decimal
+				}
+				// If conversion fails, leave the word unchanged
 			}
-			return bin // If there’s an error, just return the original string unchanged
-		})
+			// Skip the "(bin)" token itself
+			continue
+		}
+
+		// For normal words, just append to the result
+		result = append(result, token)
 	}
-	return input // Return the modified slice with all binary numbers replaced
+
+	return result // Return the transformed tokens
 }
