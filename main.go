@@ -30,7 +30,7 @@ func main() {
 	// 🧩 Βήμα 3: Εφαρμογή όλων των μετασχηματισμών
 	tokens = pipeline.ReplaceHex(tokens)
 	tokens = pipeline.ReplaceBin(tokens)
-	tokens = pipeline.ApplyCaseTransform(tokens)
+	tokens = pipeline.ApplyCaseTransformations(tokens)
 	tokens = pipeline.FormatPunctuation(tokens)
 	tokens = pipeline.FixQuotes(tokens)
 	tokens = pipeline.FixArticles(tokens)
