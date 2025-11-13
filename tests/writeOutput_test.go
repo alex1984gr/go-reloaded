@@ -12,7 +12,7 @@ func TestWriteOutput(t *testing.T) {
 	input := []string{"Hello", "beautiful", "world!"}
 	tmpFile := "test_output.txt"
 
-	err := pipeline.WriteOutPut(tmpFile, input)
+	err := pipeline.WriteOutput(tmpFile, input)
 	if err != nil {
 		t.Fatalf("WriteOutput returned error: %v", err)
 	}
@@ -36,7 +36,7 @@ func TestWriteOutput_EmptyInput(t *testing.T) {
 	tmpFile := "test_output_empty.txt"
 	input := []string{}
 
-	err := pipeline.WriteOutPut(tmpFile, input)
+	err := pipeline.WriteOutput(tmpFile, input)
 	if err != nil {
 		t.Fatalf("WriteOutput returned error: %v", err)
 	}
