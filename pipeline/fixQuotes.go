@@ -4,36 +4,47 @@ import (
 	"strings"
 )
 
-// FixQuotes διατηρεί τα quotes και εφαρμόζει σωστά το capitalization μέσα τους.
-// Μετατρέπει κάθε λέξη μέσα σε quotes σε κεφαλαία (όπως απαιτούν τα tests).
+// FixQuotes handles single quotes around words or phrases
+// Example:
+//
+//	Input:  [I am ' awesome ']
+//	Output: [I am 'awesome']
 func FixQuotes(tokens []string) []string {
-	inQuotes := false
-	for i, token := range tokens {
-		if strings.HasPrefix(token, `"`) && strings.HasSuffix(token, `"`) && len(token) > 1 {
-			// Όλο το token είναι μέσα σε quotes: "hello"
-			tokens[i] = `"` + strings.ToUpper(strings.Trim(token, `"`)) + `"`
-			continue
-		}
+	openIndex := -1
 
-		if strings.HasPrefix(token, `"`) {
-			inQuotes = true
-			if len(token) > 1 {
-				tokens[i] = `"` + strings.ToUpper(token[1:])
+	for i := 0; i < len(tokens); i++ {
+		if tokens[i] == "'" {
+			if openIndex == -1 {
+				// opening quote found
+				openIndex = i
+			} else {
+				// closing quote found
+				// collect and trim inner tokens
+				var inner []string
+				for j := openIndex + 1; j < i; j++ {
+					inner = append(inner, strings.TrimSpace(tokens[j]))
+				}
+				// join inner content with single spaces
+				content := strings.Join(inner, " ")
+				// build quoted token
+				quoted := "'" + content + "'"
+
+				// rebuild tokens: tokens before openIndex + quoted + tokens after i
+				newTokens := make([]string, 0, len(tokens)-(i-openIndex))
+				newTokens = append(newTokens, tokens[:openIndex]...)
+				newTokens = append(newTokens, quoted)
+				if i+1 < len(tokens) {
+					newTokens = append(newTokens, tokens[i+1:]...)
+				}
+
+				tokens = newTokens
+
+				// reset scanning index and openIndex
+				i = openIndex
+				openIndex = -1
 			}
-			continue
-		}
-
-		if strings.HasSuffix(token, `"`) {
-			if len(token) > 1 {
-				tokens[i] = strings.ToUpper(token[:len(token)-1]) + `"`
-			}
-			inQuotes = false
-			continue
-		}
-
-		if inQuotes {
-			tokens[i] = strings.ToUpper(token)
 		}
 	}
+
 	return tokens
 }
