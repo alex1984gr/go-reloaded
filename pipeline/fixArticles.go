@@ -50,6 +50,18 @@ func startsWithVowelOrH(s string) bool {
 	if s == "" {
 		return false
 	}
-	first := strings.ToLower(string(s[0])) // Lowercase first character
+	// trim any leading punctuation or quotes
+	s = strings.TrimLeftFunc(s, func(r rune) bool {
+		// trim spaces and common punctuation/quotes
+		switch r {
+		case ' ', '"', '\'', '(', ')', ',', '.', '!', '?', ':', ';', '<', '>':
+			return true
+		}
+		return false
+	})
+	if s == "" {
+		return false
+	}
+	first := strings.ToLower(string([]rune(s)[0])) // Lowercase first rune
 	return strings.Contains("aeiouh", first)
 }
