@@ -1,36 +1,39 @@
-package pipeline // This belongs to the "pipeline" package
+package pipeline // Declares that this file belongs to the "pipeline" package
 
 import (
-	"strconv"
-	"strings"
-	"unicode"
+	"strconv" // Used for converting string numbers to integers
+	"strings" // Provides utilities for splitting and formatting text
+	"unicode" // Provides rune-level character transformations (upper/lower)
 )
 
-// ApplyCaseTransformations applies all uppercase, lowercase, and capitalize transformations
-// based on markers: (up), (low), (cap) or (up, N), (low, N), (cap, N)
+// ApplyCaseTransformations processes the token list and applies case-transform rules.
+// Rules are encoded in tokens like: (up), (low), (cap), (up, N), (low, N), (cap, N)
 func ApplyCaseTransformations(tokens []string) []string {
-	var result []string // Resulting token slice
+	var result []string // Accumulates all final tokens after processing
 
-	for i := 0; i < len(tokens); i++ {
-		token := tokens[i]
+	for i := 0; i < len(tokens); i++ { // Iterate through each token in the input
+		token := tokens[i] // Current token under inspection
 
-		// Check if token starts with "(" and ends with ")" indicating a marker
+		// Check whether the token is a transformation marker, e.g. "(up)" or "(cap, 3)"
 		if strings.HasPrefix(token, "(") && strings.HasSuffix(token, ")") {
-			// Remove parentheses
+
+			// Extract the inner content without the parentheses
 			content := token[1 : len(token)-1]
 
-			// Split by comma to check if there's a number argument
+			// Some markers include a count after a comma (e.g. "up, 3")
 			parts := strings.Split(content, ",")
-			action := strings.TrimSpace(parts[0]) // "up", "low", or "cap"
-			count := 1                            // Default: 1 word
+			action := strings.TrimSpace(parts[0]) // The instruction keyword: up/low/cap
+			count := 1                            // Default number of affected tokens
 
-			if len(parts) == 2 { // If there's a number
+			// If a count is provided, parse it
+			if len(parts) == 2 {
 				if n, err := strconv.Atoi(strings.TrimSpace(parts[1])); err == nil {
 					count = n
 				}
 			}
 
-			// Apply transformation to the last 'count' words in result
+			// Apply the correct transformation to the previously collected tokens
+			// depending on the requested action
 			switch strings.ToLower(action) {
 			case "up":
 				applyUppercase(result, count)
@@ -39,29 +42,29 @@ func ApplyCaseTransformations(tokens []string) []string {
 			case "cap":
 				applyCapitalize(result, count)
 			default:
-				// Unknown marker, just ignore
+				// Unknown instruction: ignore silently
 			}
 
-			// Skip adding the marker itself
+			// Do NOT append the marker itself to output
 			continue
 		}
 
-		// Normal token, add to result
+		// Normal token — push it to the result slice
 		result = append(result, token)
 	}
 
-	return result
+	return result // Return the fully processed token sequence
 }
 
-// Helper: apply uppercase to last 'count' tokens in slice
+// applyUppercase converts the last <count> tokens of the slice to uppercase.
 func applyUppercase(tokens []string, count int) {
-	start := max(0, len(tokens)-count)
+	start := max(0, len(tokens)-count) // Determine the safe starting index
 	for i := start; i < len(tokens); i++ {
 		tokens[i] = strings.ToUpper(tokens[i])
 	}
 }
 
-// Helper: apply lowercase to last 'count' tokens in slice
+// applyLowercase converts the last <count> tokens of the slice to lowercase.
 func applyLowercase(tokens []string, count int) {
 	start := max(0, len(tokens)-count)
 	for i := start; i < len(tokens); i++ {
@@ -69,7 +72,8 @@ func applyLowercase(tokens []string, count int) {
 	}
 }
 
-// Helper: capitalize last 'count' tokens in slice
+// applyCapitalize capitalizes the last <count> tokens.
+// Capitalizing means: first letter uppercase, remaining letters lowercase.
 func applyCapitalize(tokens []string, count int) {
 	start := max(0, len(tokens)-count)
 	for i := start; i < len(tokens); i++ {
@@ -77,20 +81,26 @@ func applyCapitalize(tokens []string, count int) {
 	}
 }
 
-// Capitalize the first letter of a word, keep the rest lowercase
+// capitalizeWord transforms a single token so that:
+// - the first character is uppercase
+// - the remaining characters are lowercase
 func capitalizeWord(word string) string {
 	if len(word) == 0 {
-		return word
+		return word // No operation on empty tokens
 	}
-	runes := []rune(word)
-	runes[0] = unicode.ToUpper(runes[0])
+
+	runes := []rune(word) // Convert string to rune slice for safe Unicode operations
+
+	runes[0] = unicode.ToUpper(runes[0]) // Uppercase first character
 	for i := 1; i < len(runes); i++ {
-		runes[i] = unicode.ToLower(runes[i])
+		runes[i] = unicode.ToLower(runes[i]) // Lowercase the rest
 	}
-	return string(runes)
+
+	return string(runes) // Convert back to string
 }
 
-// Utility: max function to avoid negative indices
+// max returns the larger of two integers.
+// Used to avoid negative slice indexing.
 func max(a, b int) int {
 	if a > b {
 		return a
