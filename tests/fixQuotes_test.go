@@ -1,47 +1,54 @@
 package tests
 
 import (
+	"fmt"
 	"go-reloaded/pipeline"
+	"reflect"
 	"testing"
 )
 
-func TestFixQuotes_Simple(t *testing.T) {
-	input := []string{"\"", "Hello", "world", "\""}
-	expected := []string{"\"Hello World\""}
-	result := pipeline.FixQuotes(input)
+func TestFixQuotes(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    []string
+		expected []string
+	}{
+		{
+			name:     "Single word quote",
+			input:    []string{"I", "am", "exactly", "how", "they", "describe", "me", ":", "'", " awesome ", "'"},
+			expected: []string{"I", "am", "exactly", "how", "they", "describe", "me", ":", "'awesome'"},
+		},
+		{
+			name:     "Multiple word quote",
+			input:    []string{"As", "Elton", "John", "said", ":", "'", " I", "am", "the", "most", "well-known", "homosexual", "in", "the", "world ", "'"},
+			expected: []string{"As", "Elton", "John", "said", ":", "'I am the most well-known homosexual in the world'"},
+		},
+		{
+			name:     "No quotes",
+			input:    []string{"Hello", "world"},
+			expected: []string{"Hello", "world"},
+		},
+		{
+			name:     "Nested quotes ignored",
+			input:    []string{"He", "said", "'", "It's", "amazing", "'"},
+			expected: []string{"He", "said", "'It's amazing'"},
+		},
+	}
 
-	if len(result) != len(expected) {
-		t.Fatalf("Expected %d results, got %d", len(expected), len(result))
-	}
-	for i := range result {
-		if result[i] != expected[i] {
-			t.Errorf("Expected %v, got %v", expected[i], result[i])
-		}
-	}
-}
-func TestFixQuotes_Unmatched(t *testing.T) {
-	input := []string{"Hello", "\"World\""}
-	expected := []string{"Hello", "\"World\""}
-	result := pipeline.FixQuotes(input)
-	if len(result) != len(expected) {
-		t.Fatalf("Expected %d results, got %d", len(expected), len(result))
-	}
-	for i := range result {
-		if result[i] != expected[i] {
-			t.Errorf("Expected %v, got %v", expected[i], result[i])
-		}
-	}
-}
-func TestFixQuotes_NoQuotes(t *testing.T) {
-	input := []string{"Hello", "World"}
-	expected := []string{"Hello", "World"}
-	result := pipeline.FixQuotes(input)
-	if len(result) != len(expected) {
-		t.Fatalf("Expected %d results, got %d", len(expected), len(result))
-	}
-	for i := range result {
-		if result[i] != expected[i] {
-			t.Errorf("Expected %v, got %v", expected[i], result[i])
-		}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fmt.Println("[DEBUG] Running test:", tt.name)
+			fmt.Println("[DEBUG] Input tokens: ", tt.input)
+
+			result := pipeline.FixQuotes(tt.input)
+			fmt.Println("[DEBUG] Output tokens:", result)
+			fmt.Println("[DEBUG] Expected tokens:", tt.expected)
+
+			if !reflect.DeepEqual(result, tt.expected) {
+				t.Errorf("❌ Test failed: %s\nExpected: %v\nGot:      %v", tt.name, tt.expected, result)
+			} else {
+				fmt.Println("✅ Test passed:", tt.name)
+			}
+		})
 	}
 }
