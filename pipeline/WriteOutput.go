@@ -6,7 +6,10 @@ import (
 )
 
 func JoinTokens(tokens []string) string {
-	return strings.Join(tokens, "")
+	// Join tokens with a single space. Punctuation tokens are attached to
+	// words by FormatPunctuation, so joining with spaces yields properly
+	// spaced output (e.g. "Hello, world!").
+	return strings.Join(tokens, " ")
 }
 
 func WriteOutput(filename string, input []string) error {
