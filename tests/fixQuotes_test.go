@@ -37,13 +37,18 @@ func TestFixQuotes(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Debug: print which test case is running and its input tokens.
 			fmt.Println("[DEBUG] Running test:", tt.name)
 			fmt.Println("[DEBUG] Input tokens: ", tt.input)
 
+			// Run FixQuotes on the test input.
 			result := pipeline.FixQuotes(tt.input)
+
+			// Debug: show what the function returned and the expected result.
 			fmt.Println("[DEBUG] Output tokens:", result)
 			fmt.Println("[DEBUG] Expected tokens:", tt.expected)
 
+			// Compare and fail the test if results differ from expectation.
 			if !reflect.DeepEqual(result, tt.expected) {
 				t.Errorf("❌ Test failed: %s\nExpected: %v\nGot:      %v", tt.name, tt.expected, result)
 			} else {

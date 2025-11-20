@@ -11,6 +11,10 @@ func Tokenize(input []rune) []string {
 	n := len(input)
 	i := 0
 
+	// Loop over input runes; `i` is the current read index.
+
+	// isPunct returns true for characters treated as punctuation
+	// for grouping into punctuation-only tokens.
 	isPunct := func(r rune) bool {
 		switch r {
 		case '.', ',', '!', '?', ':', ';':
@@ -20,15 +24,20 @@ func Tokenize(input []rune) []string {
 	}
 
 	for i < n {
+		// Read the current rune at index i
 		r := input[i]
 
-		// whitespace -> skip and flush
+		// If current rune is whitespace, skip it and continue scanning.
+		// Tokens are delimited by whitespace, so we do not emit space tokens.
 		if r == ' ' || r == '\n' || r == '\t' || r == '\r' {
 			i++
 			continue
 		}
 
 			// markers like (up) or ( low, 3 ): capture everything until the next ')'
+			// If we see a '(', try to capture the marker like '(up)' or '(hex)'.
+			// We scan forward until a matching ')' and treat the whole
+			// parentheses sequence as a single token (preserving inner spaces).
 			if r == '(' {
 				j := i + 1
 				valid := false
@@ -40,7 +49,7 @@ func Tokenize(input []rune) []string {
 					j++
 				}
 				if valid {
-					// capture whole parentheses, preserving inner spaces (we'll normalize later)
+					// Append the whole parentheses token and advance past it.
 					tokens = append(tokens, string(input[i:j+1]))
 					i = j + 1
 					continue
@@ -48,6 +57,7 @@ func Tokenize(input []rune) []string {
 			}
 
 		// punctuation sequences
+		// Group runs of punctuation characters into a single token.
 		if isPunct(r) {
 			j := i + 1
 			for j < n && isPunct(input[j]) {
@@ -59,6 +69,7 @@ func Tokenize(input []rune) []string {
 		}
 
 		// single/double quote or angle bracket as single token
+		// Single/double quotes and angle brackets are emitted as single-character tokens.
 		if r == '\'' || r == '"' || r == '<' || r == '>' {
 			tokens = append(tokens, string(r))
 			i++
@@ -66,6 +77,8 @@ func Tokenize(input []rune) []string {
 		}
 
 		// otherwise collect a word until next separator
+		// Otherwise, collect a word token until the next separator.
+		// Separators include whitespace, parentheses, quotes, angle brackets, and punctuation.
 		j := i
 		for j < n {
 			rr := input[j]
@@ -78,10 +91,11 @@ func Tokenize(input []rune) []string {
 			j++
 		}
 		if j > i {
+			// Append the substring [i:j] as a token and advance i.
 			tokens = append(tokens, string(input[i:j]))
 			i = j
 		} else {
-			// fallback single rune token
+			// Fallback: emit single rune as a token to avoid infinite loop.
 			tokens = append(tokens, string(input[i]))
 			i++
 		}

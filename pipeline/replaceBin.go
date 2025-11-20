@@ -9,30 +9,35 @@ import (
 // ReplaceBin scans tokens for "(bin)" markers and converts the previous token
 // from binary (base 2) to decimal (base 10). Invalid binaries are ignored.
 func ReplaceBin(tokens []string) []string {
-	var result []string // Holds the processed tokens
+	// Result will accumulate tokens, replacing binary tokens as we go.
+	var result []string
 
-	for i := 0; i < len(tokens); i++ { // Iterate through each token
+	// Walk through each token in the input slice.
+	for i := 0; i < len(tokens); i++ {
 		token := tokens[i]
 
-		// Check if the current token is "(bin)" (case-insensitive)
+		// If token is the case-insensitive marker "(bin)", attempt conversion.
 		if strings.EqualFold(token, "(bin)") {
-			if len(result) > 0 { // Make sure there is a previous token to convert
-				binWord := result[len(result)-1] // Get the previous token
+			// Only attempt conversion if we already have a previous token.
+			if len(result) > 0 {
+				binWord := result[len(result)-1] // Candidate binary string
 
-				// Try converting from binary string to decimal integer
+				// Parse the candidate as a base-2 integer.
 				value, err := strconv.ParseInt(binWord, 2, 64)
-				if err == nil { // Conversion succeeded
-					result[len(result)-1] = fmt.Sprintf("%d", value) // Replace with decimal
+				if err == nil {
+					// Successful conversion: replace the previous token with decimal string.
+					result[len(result)-1] = fmt.Sprintf("%d", value)
 				}
-				// If conversion fails, leave the word unchanged
+				// If parsing fails, keep the previous token unchanged.
 			}
-			// Skip the "(bin)" token itself
+			// Do not append the marker itself to the result.
 			continue
 		}
 
-		// For normal words, just append to the result
+		// Normal token: append as-is.
 		result = append(result, token)
 	}
 
-	return result // Return the transformed tokens
+	// Return transformed token slice.
+	return result
 }

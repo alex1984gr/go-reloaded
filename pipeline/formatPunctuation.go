@@ -17,19 +17,22 @@ func FormatPunctuation(tokens []string) []string {
 
 	var out []string
 	for i := 0; i < len(tokens); i++ {
+		// Read current token
 		t := tokens[i]
+		// If token consists only of punctuation and we have a previous token,
+		// attach this punctuation to the end of the previous token (no space).
 		if isPunctuationSequence(t) && len(out) > 0 {
-			// attach to previous token
 			out[len(out)-1] = out[len(out)-1] + t
 		} else {
+			// Otherwise, keep token as-is.
 			out = append(out, t)
 		}
 	}
 
-	// Now fix quotes and clean spaces
+	// Now run FixQuotes to collapse quoted tokens and then clean up spacing
 	out = FixQuotes(out)
 	for i := 0; i < len(out); i++ {
-		// collapse multiple spaces and trim
+		// Collapse multiple spaces inside the token and trim edges.
 		s := out[i]
 		for strings.Contains(s, "  ") {
 			s = strings.ReplaceAll(s, "  ", " ")

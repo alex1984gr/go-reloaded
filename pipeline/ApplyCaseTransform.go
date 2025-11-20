@@ -9,31 +9,34 @@ import (
 // ApplyCaseTransformations processes the token list and applies case-transform rules.
 // Rules are encoded in tokens like: (up), (low), (cap), (up, N), (low, N), (cap, N)
 func ApplyCaseTransformations(tokens []string) []string {
-	var result []string // Accumulates all final tokens after processing
+	// Create an output slice that will accumulate non-marker tokens and
+	// mutated tokens produced by applying markers.
+	var result []string
 
-	for i := 0; i < len(tokens); i++ { // Iterate through each token in the input
+	// Iterate over each token in the incoming slice.
+	for i := 0; i < len(tokens); i++ {
 		token := tokens[i] // Current token under inspection
 
-		// Check whether the token is a transformation marker, e.g. "(up)" or "(cap, 3)"
+		// If this token looks like a parenthesized marker (e.g. "(up)"), handle it
 		if strings.HasPrefix(token, "(") && strings.HasSuffix(token, ")") {
 
-			// Extract the inner content without the parentheses
+			// Strip parentheses to get the marker content.
 			content := token[1 : len(token)-1]
 
-			// Some markers include a count after a comma (e.g. "up, 3")
+			// Marker may include a comma and a count, like "up, 3".
 			parts := strings.Split(content, ",")
-			action := strings.TrimSpace(parts[0]) // The instruction keyword: up/low/cap
-			count := 1                            // Default number of affected tokens
+			action := strings.TrimSpace(parts[0]) // e.g. "up", "low", "cap"
+			count := 1                            // default affected token count
 
-			// If a count is provided, parse it
+			// If a count is provided, attempt to parse it as an integer.
 			if len(parts) == 2 {
 				if n, err := strconv.Atoi(strings.TrimSpace(parts[1])); err == nil {
 					count = n
 				}
 			}
 
-			// Apply the correct transformation to the previously collected tokens
-			// depending on the requested action
+			// Apply the requested transformation to the previously collected tokens
+			// in the result slice (we operate on the last `count` tokens).
 			switch strings.ToLower(action) {
 			case "up":
 				applyUppercase(result, count)
@@ -42,18 +45,19 @@ func ApplyCaseTransformations(tokens []string) []string {
 			case "cap":
 				applyCapitalize(result, count)
 			default:
-				// Unknown instruction: ignore silently
+				// Unknown marker: ignore it silently.
 			}
 
-			// Do NOT append the marker itself to output
+			// Skip appending the marker token itself to the output.
 			continue
 		}
 
-		// Normal token — push it to the result slice
+		// Not a marker: append the token to the output slice.
 		result = append(result, token)
 	}
 
-	return result // Return the fully processed token sequence
+	// Return the transformed tokens.
+	return result
 }
 
 // applyUppercase converts the last <count> tokens of the slice to uppercase.
@@ -89,14 +93,17 @@ func capitalizeWord(word string) string {
 		return word // No operation on empty tokens
 	}
 
-	runes := []rune(word) // Convert string to rune slice for safe Unicode operations
+	// Convert the string to runes for Unicode-correct operations.
+	runes := []rune(word)
 
-	runes[0] = unicode.ToUpper(runes[0]) // Uppercase first character
+	// Uppercase first character and lowercase remaining characters.
+	runes[0] = unicode.ToUpper(runes[0])
 	for i := 1; i < len(runes); i++ {
-		runes[i] = unicode.ToLower(runes[i]) // Lowercase the rest
+		runes[i] = unicode.ToLower(runes[i])
 	}
 
-	return string(runes) // Convert back to string
+	// Convert back to string and return.
+	return string(runes)
 }
 
 // max returns the larger of two integers.

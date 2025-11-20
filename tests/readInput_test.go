@@ -7,31 +7,34 @@ import (
 )
 
 func TestReadInput(t *testing.T) {
-	tmpFile, err := os.CreateTemp("", "input_*.txt") // Create a temporary file for the test
+	// Create a temporary file and write simple content to it. This ensures the test
+	// does not depend on any external files and can run in CI or locally.
+	tmpFile, err := os.CreateTemp("", "input_*.txt")
 	if err != nil {
-		t.Fatalf("❌ Failed to create temporary file: %v", err) // Delete the file after the test finishes
+		t.Fatalf("❌ Failed to create temporary file: %v", err)
 	}
+	// Ensure the temp file is removed after test finishes to avoid leaks.
 	defer os.Remove(tmpFile.Name())
 
-	// Write simple content into it for testing
+	// Write a simple string and close the file before reading.
 	content := "Hello, Go Reloaded!"
 	tmpFile.WriteString(content)
 	tmpFile.Close()
 
-	// Call the readInput function from the pipeline
+	// Read back using the pipeline helper under test.
 	result, err := pipeline.ReadInput(tmpFile.Name())
 
-	// Check if an error was returned (there shouldn't be one)
+	// No error expected when reading the temporary file.
 	if err != nil {
 		t.Fatalf("❌ Unexpected error: %v", err)
 	}
 
-	// Verify that the result matches the original content
+	// The returned content should exactly match what we wrote.
 	if result != content {
 		t.Errorf("❌ Expected '%s', receive '%s'", content, result)
 	}
 
-	// If execution reaches this point, everything went well
+	// Log success for manual test runs; not required for CI.
 	t.Logf("✅ The readInput read the file correctly : %s", tmpFile.Name())
 }
 

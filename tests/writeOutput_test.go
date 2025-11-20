@@ -9,7 +9,9 @@ import (
 )
 
 func TestWriteOutput(t *testing.T) {
-	input := []string{"Hello", "beautiful", "world!"}
+	// WriteOutput expects each slice element to be a full line.
+	// Provide a single-line input to match newline-per-line behavior.
+	input := []string{"Hello beautiful world!"}
 	tmpFile := "test_output.txt"
 
 	err := pipeline.WriteOutput(tmpFile, input)

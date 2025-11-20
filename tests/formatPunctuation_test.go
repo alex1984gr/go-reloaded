@@ -37,13 +37,18 @@ func TestFormatPunctuation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Debug: print the test name and input to aid troubleshooting.
 			fmt.Println("[DEBUG] Running test:", tt.name)
 			fmt.Println("[DEBUG] Input tokens: ", tt.input)
 
+			// Execute the function under test and capture its output.
 			result := pipeline.FormatPunctuation(tt.input)
+
+			// Debug: show output and expected tokens for visibility.
 			fmt.Println("[DEBUG] Output tokens:", result)
 			fmt.Println("[DEBUG] Expected tokens:", tt.expected)
 
+			// Assert equality between expected and result; fail the test on mismatch.
 			if !reflect.DeepEqual(result, tt.expected) {
 				t.Errorf("❌ Test failed: %s\nExpected: %v\nGot:      %v", tt.name, tt.expected, result)
 			} else {

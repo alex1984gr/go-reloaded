@@ -9,7 +9,7 @@ import (
 )
 
 // TestReplaceBin verifies that pipeline.ReplaceBin correctly converts
-// binary numbers before "(bin)" into decimal numbers.
+// binary numbers before "(bin)" into decimal numbers across several scenarios.
 func TestReplaceBin(t *testing.T) {
 	// Define test cases
 	tests := []struct {
@@ -44,23 +44,22 @@ func TestReplaceBin(t *testing.T) {
 		},
 	}
 
-	// Loop through all test cases
+	// Loop through all test cases and run them individually.
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) { // Run each test separately
-			fmt.Printf("\n[DEBUG] Running test: %s\n", tt.name) // Debug: test name
-			fmt.Printf("[DEBUG] Input tokens: %v\n", tt.input)  // Debug: input tokens
+			// Debug output to help trace failing cases
+			fmt.Printf("\n[DEBUG] Running test: %s\n", tt.name)
+			fmt.Printf("[DEBUG] Input tokens: %v\n", tt.input)
 
-			// Call ReplaceBin function
+			// Call ReplaceBin and inspect its output
 			result := pipeline.ReplaceBin(tt.input)
-			fmt.Printf("[DEBUG] Output tokens:   %v\n", result)      // Debug: output tokens
-			fmt.Printf("[DEBUG] Expected tokens: %v\n", tt.expected) // Debug: expected output
+			fmt.Printf("[DEBUG] Output tokens:   %v\n", result)
+			fmt.Printf("[DEBUG] Expected tokens: %v\n", tt.expected)
 
-			// Compare result with expected
+			// Validate result
 			if !reflect.DeepEqual(result, tt.expected) {
-				// If not equal, fail the test and show difference
 				t.Errorf("\n❌ Test failed: %s\nExpected: %v\nGot:      %v", tt.name, tt.expected, result)
 			} else {
-				// Otherwise, success message
 				fmt.Printf("✅ Test passed: %s\n", tt.name)
 			}
 		})

@@ -7,11 +7,14 @@ import (
 	"go-reloaded/pipeline"
 )
 
-// TestTokenize_Basic ελέγχει τη βασική λειτουργία της tokenize
+// TestTokenize_Basic verifies the tokenizer splits words and special symbols.
+// Input: runes containing words, angle brackets and a double-quoted word.
+// Expectation: tokens should separate words and emit angle brackets and quote characters as tokens.
 func TestTokenize_Basic(t *testing.T) {
 	input := []rune(`Hello <world> "Go"`)
 	expected := []string{"Hello", "<", "world", ">", "\"", "Go", "\""}
 
+	// Call the tokenizer and compare the returned slice with expected tokens.
 	result := pipeline.Tokenize(input)
 
 	if !reflect.DeepEqual(result, expected) {
@@ -19,7 +22,7 @@ func TestTokenize_Basic(t *testing.T) {
 	}
 }
 
-// TestTokenize_WithSpaces ελέγχει ότι αγνοούνται πολλαπλά κενά
+// TestTokenize_WithSpaces ensures consecutive spaces are treated as a single separator.
 func TestTokenize_WithSpaces(t *testing.T) {
 	input := []rune("Hello   world")
 	expected := []string{"Hello", "world"}
@@ -31,7 +34,7 @@ func TestTokenize_WithSpaces(t *testing.T) {
 	}
 }
 
-// TestTokenize_OnlySpecials ελέγχει τη συμπεριφορά μόνο με ειδικούς χαρακτήρες
+// TestTokenize_OnlySpecials checks tokenizer behavior with only special characters.
 func TestTokenize_OnlySpecials(t *testing.T) {
 	input := []rune(`<>""`)
 	expected := []string{"<", ">", "\"", "\""}
@@ -43,7 +46,7 @@ func TestTokenize_OnlySpecials(t *testing.T) {
 	}
 }
 
-// TestTokenize_EmptyInput ελέγχει τι γίνεται με κενό input
+// TestTokenize_EmptyInput verifies that empty input yields no tokens.
 func TestTokenize_EmptyInput(t *testing.T) {
 	input := []rune("")
 	expected := []string{}

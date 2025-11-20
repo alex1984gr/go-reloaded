@@ -6,6 +6,8 @@ import (
 	"go-reloaded/pipeline"
 )
 
+// TestFixArticles contains several scenarios validating that "a" is
+// converted to "an" when the following word starts with a vowel or 'h'.
 func TestFixArticles(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -39,6 +41,7 @@ func TestFixArticles(t *testing.T) {
 		},
 	}
 
+	// For each scenario, run FixArticles and assert the output tokens match expected.
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := pipeline.FixArticles(tt.input)

@@ -60,25 +60,21 @@ func TestApplyCaseTransformations(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Debug: show test case name
+			// Debug: show test case name and input tokens to assist debugging.
 			fmt.Printf("\n[DEBUG] Running test: %s\n", tt.name)
-			// Debug: show input tokens
 			fmt.Printf("[DEBUG] Input tokens: %v\n", tt.input)
 
-			// Call the function being tested
+			// Execute the transformation under test.
 			result := pipeline.ApplyCaseTransformations(tt.input)
 
-			// Debug: show output tokens
+			// Debug: show the output and what we expected.
 			fmt.Printf("[DEBUG] Output tokens:   %v\n", result)
-			// Debug: show expected tokens
 			fmt.Printf("[DEBUG] Expected tokens: %v\n", tt.expected)
 
-			// Compare result with expected
+			// Assert equality and report differences if any.
 			if !reflect.DeepEqual(result, tt.expected) {
-				// If not equal, fail the test
 				t.Errorf("\n❌ Test failed: %s\nExpected: %v\nGot:      %v", tt.name, tt.expected, result)
 			} else {
-				// Otherwise, success message
 				fmt.Printf("✅ Test passed: %s\n", tt.name)
 			}
 		})

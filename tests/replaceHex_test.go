@@ -8,8 +8,8 @@ import (
 	"go-reloaded/pipeline" // Import the package where ReplaceHex() is defined
 )
 
-// TestReplaceHex checks if pipeline.ReplaceHex correctly replaces
-// hexadecimal numbers (before "(hex)") with their decimal equivalents.
+// TestReplaceHex validates ReplaceHex behavior across several scenarios.
+// For each case we provide tokenized input, run ReplaceHex and compare to expected output.
 func TestReplaceHex(t *testing.T) {
 	// Define multiple test scenarios to ensure the function works in all cases
 	tests := []struct {
@@ -47,19 +47,21 @@ func TestReplaceHex(t *testing.T) {
 	// Loop through all defined test cases
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) { // Run each test separately by name
-			fmt.Printf("\n[DEBUG] Running test: %s\n", tt.name) // Print the current test name
-			fmt.Printf("[DEBUG] Input tokens: %v\n", tt.input)  // Print the input tokens before processing
+			// Debug: show the test case name and input
+			fmt.Printf("\n[DEBUG] Running test: %s\n", tt.name)
+			fmt.Printf("[DEBUG] Input tokens: %v\n", tt.input)
 
-			result := pipeline.ReplaceHex(tt.input)                  // Call the ReplaceHex function
-			fmt.Printf("[DEBUG] Output tokens:   %v\n", result)      // Print what the function returned
-			fmt.Printf("[DEBUG] Expected tokens: %v\n", tt.expected) // Print the expected output for comparison
+			// Execute function under test
+			result := pipeline.ReplaceHex(tt.input)
 
-			// Compare the actual output with the expected result
+			// Debug: show output and expected values for easier diagnosis
+			fmt.Printf("[DEBUG] Output tokens:   %v\n", result)
+			fmt.Printf("[DEBUG] Expected tokens: %v\n", tt.expected)
+
+			// Compare the actual output with the expected result and fail on mismatch
 			if !reflect.DeepEqual(result, tt.expected) {
-				// If the slices don't match, mark the test as failed
 				t.Errorf("\n❌ Test failed: %s\nExpected: %v\nGot:      %v", tt.name, tt.expected, result)
 			} else {
-				// If everything matches, print a success debug message
 				fmt.Printf("✅ Test passed: %s\n", tt.name)
 			}
 		})

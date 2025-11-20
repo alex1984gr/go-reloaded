@@ -5,17 +5,14 @@ import (
 	"strings"
 )
 
-// Ενώνει τα tokens σε ένα ενιαίο string.
-// Τα σημεία στίξης έχουν ήδη διαμορφωθεί σωστά από FormatPunctuation,
-// οπότε το Join γίνεται με space.
 func JoinTokens(tokens []string) string {
+	// Join token slice into a single space-separated string (used by callers
+	// that need a single-line representation of tokens).
 	return strings.Join(tokens, " ")
 }
-
-// Γράφει το output στο αρχείο.
-// Κάθε στοιχείο του input slice γίνεται δική του γραμμή.
-// Το αρχείο τελειώνει με newline όπως απαιτεί η άσκηση.
 func WriteOutput(filename string, input []string) error {
+	// Write each element of the input slice as its own line in the output file.
+	// This preserves original line boundaries from the processing pipeline.
 	output := strings.Join(input, "\n") + "\n"
 	return os.WriteFile(filename, []byte(output), 0o644)
 }

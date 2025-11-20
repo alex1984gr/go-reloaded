@@ -17,28 +17,31 @@ func FixArticles(words []string) []string {
 	result := make([]string, len(words)) // Prepare output slice
 	copy(result, words)                  // Copy input to result
 
-	caser := cases.Title(language.English) // Title-caser for capitalized articles
+	// caser used to preserve capitalization (e.g., "A" -> "An")
+	caser := cases.Title(language.English)
 
-	for i := 0; i < len(result)-1; i++ { // Loop through all words except last
-		original := result[i]             // Store the current word
-		word := strings.ToLower(original) // Lowercase for comparison
-		next := result[i+1]               // Get next word
+	// Iterate through tokens except the last, since we look ahead one token.
+	for i := 0; i < len(result)-1; i++ {
+		original := result[i]             // Current token as-is
+		word := strings.ToLower(original) // Lowercase version for equality checks
+		next := result[i+1]               // Peek at the next token
 
-		// Only care about "a" (or capitalized "A")
+		// Only change plain "a" (case-insensitive)
 		if word == "a" {
-			article := "a" // Default
+			article := "a" // default replacement
 
-			// If next word starts with vowel or 'h', use "an"
+			// If the next token begins with a vowel or 'h', choose "an" instead
 			if startsWithVowelOrH(next) {
 				article = "an"
 			}
 
-			// Preserve capitalization
+			// Preserve capitalization: if original started with uppercase, title-case the article
 			if len(original) > 0 && original[0] >= 'A' && original[0] <= 'Z' {
 				article = caser.String(article)
 			}
 
-			result[i] = article // Replace in result
+			// Store the possibly-updated article back into the result slice
+			result[i] = article
 		}
 	}
 
@@ -62,6 +65,7 @@ func startsWithVowelOrH(s string) bool {
 	if s == "" {
 		return false
 	}
-	first := strings.ToLower(string([]rune(s)[0])) // Lowercase first rune
+	// Extract the first rune of the trimmed string and lowercase it for the vowel check.
+	first := strings.ToLower(string([]rune(s)[0]))
 	return strings.Contains("aeiouh", first)
 }

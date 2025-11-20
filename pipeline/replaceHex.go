@@ -10,33 +10,34 @@ import (
 // it replaces the *previous word* (which is always a hexadecimal number)
 // with its decimal equivalent.
 func ReplaceHex(tokens []string) []string {
-	var result []string // Holds the final list of processed tokens
+	// Accumulate transformed tokens in result.
+	var result []string
 
-	for i := 0; i < len(tokens); i++ { // Iterate through each token
+	// Walk input tokens sequentially.
+	for i := 0; i < len(tokens); i++ {
 		token := tokens[i]
 
-		// Check if the current token is "(hex)"
+		// If current token is the "(hex)" marker, attempt to convert the previous token.
 		if strings.EqualFold(token, "(hex)") {
-			// Make sure there's a previous word to convert
 			if len(result) > 0 {
-				// Take the last word added to the result slice
-				hexWord := result[len(result)-1]
+				hexWord := result[len(result)-1] // Candidate hex string
 
-				// Try converting it from hexadecimal (base 16) to decimal (base 10)
+				// Parse the candidate as a base-16 integer.
 				value, err := strconv.ParseInt(hexWord, 16, 64)
 				if err == nil {
-					// If conversion succeeded, replace the previous word with the decimal number
+					// On success, replace the previous token with its decimal string.
 					result[len(result)-1] = fmt.Sprintf("%d", value)
 				}
+				// On parse failure, leave previous token unchanged.
 			}
-			// Skip adding "(hex)" itself to the result
+			// Do not append the marker itself to the output.
 			continue
 		}
 
-		// If it's a normal word, just add it to the result
+		// Normal token: append unchanged.
 		result = append(result, token)
 	}
 
-	// Return the transformed list of tokens
+	// Return the resulting token slice after conversions.
 	return result
 }

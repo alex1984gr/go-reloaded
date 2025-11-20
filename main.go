@@ -18,37 +18,37 @@ func main() {
 	inputFile := os.Args[1]
 	outputFile := os.Args[2]
 
-	// Διαβάζουμε όλο το input
+	// Read the entire input file into a string
 	text, err := pipeline.ReadInput(inputFile)
 	if err != nil {
 		log.Fatalf("Error reading input file: %v", err)
 	}
 
-	// Σπάμε σε γραμμές
+	// Split the input into lines
 	lines := strings.Split(text, "\n")
 
 	var results []string
 
 	for _, line := range lines {
+		// If the input line is empty, preserve an empty output line.
 		if line == "" {
 			results = append(results, "")
 			continue
 		}
 
+		// Tokenize the line into pipeline tokens (words, punctuation, markers).
 		tokens := pipeline.Tokenize([]rune(line))
 
-		tokens = pipeline.ReplaceHex(tokens)
-		tokens = pipeline.ReplaceBin(tokens)
-		tokens = pipeline.ApplyCaseTransformations(tokens)
-		tokens = pipeline.FormatPunctuation(tokens)
-		tokens = pipeline.FixQuotes(tokens)
-		tokens = pipeline.FixArticles(tokens)
+		// Apply the standard sequence of transformations (articles, quotes,
+		// replacements, case transforms, punctuation fixes, etc.).
+		tokens = pipeline.ApplyTransformations(tokens)
 
+		// Join tokens back into a single line string and append to results.
 		result := pipeline.JoinTokens(tokens)
 		results = append(results, result)
 	}
 
-	// Γράφουμε ΚΑΘΕ γραμμή στο output
+	// Write each processed line to the output file
 	err = pipeline.WriteOutput(outputFile, results)
 	if err != nil {
 		log.Fatalf("Error writing output file: %v", err)
